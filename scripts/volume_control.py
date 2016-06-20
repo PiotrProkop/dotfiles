@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#Based on https://github.com/Airblader/dotfiles-manjaro/tree/master/scripts/volume_control.py
 import subprocess
 import sys
 from subprocess import call
