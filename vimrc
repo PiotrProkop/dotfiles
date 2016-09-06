@@ -14,6 +14,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'klen/python-mode'
 Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
+Plugin 'morhetz/gruvbox'
 
 
 
@@ -122,3 +123,11 @@ if has("autocmd")
    autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
+
+"Golang highligt 
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
