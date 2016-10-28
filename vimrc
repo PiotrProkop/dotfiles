@@ -16,8 +16,6 @@ Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
 Plugin 'morhetz/gruvbox'
 Plugin 'junegunn/goyo.vim'
-Plugin 'bash-support.vim'
-
 
 
 call vundle#end()            " required
