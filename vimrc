@@ -1,27 +1,35 @@
 set nocompatible              " be iMproved, required
+set nobackup                  " Don't keep backup file
+set clipboard=unnamed        " Yank and paste with the system clipboard
+
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
+
 call vundle#begin()
 " " alternatively, pass a path where Vundle should install plugins
 " "call vundle#begin('~/some/path/here')
 "
 " " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
-Bundle 'chase/vim-ansible-yaml'
 Bundle 'scrooloose/nerdtree'
 Bundle 'klen/python-mode'
 Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
 Plugin 'morhetz/gruvbox'
 Plugin 'junegunn/goyo.vim'
-
+Plugin 'elixir-lang/vim-elixir'
+Plugin 'pearofducks/ansible-vim'
 
 call vundle#end()            " required
+
 filetype plugin indent on    " required
+
 syntax on
+"change mapleader
 let mapleader=","
+
 let g:ansible_options = {'ignore_blank_lines': 0}
 
 if has('gui_running')
@@ -29,9 +37,11 @@ if has('gui_running')
 else
     set background=dark
 endif
+
+" Gruvbox colorscheme
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
-color gruvbox
+"color gruvbox
 
 ""settings fo golnang
 let g:acp_enableAtStartup = 0
@@ -42,7 +52,7 @@ let g:neocomplete#enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-" Plugin key-mappings.
+" Plugin key-mappings for neocomplete
 inoremap <expr><C-g>     neocomplete#undo_completion()
 inoremap <expr><C-l>     neocomplete#complete_common_string()
 
@@ -52,8 +62,10 @@ inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
     return neocomplete#close_popup() . "\<CR>"
 endfunction
+
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
@@ -118,6 +130,7 @@ let g:tagbar_type_go = {
 \ }
 
 nmap <F8> :TagbarToggle<CR>
+
 " NERDTree
 nmap <leader>n :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
@@ -141,10 +154,10 @@ map <right> <nop>
 
 "Tabs per language
 if has("autocmd")
-   autocmd FileType python set ts=4 sw=4 et expandtab " Pytho
+   autocmd FileType python set ts=4 sw=4 et expandtab " Python
    autocmd FileType php set ts=4 sw=4 et expandtab     " Php
    autocmd FileType go set ts=4 sw=4 et expandtab     " Go
-   autocmd FileType yml set ts=2 sw=2 et expandtab     " Yaml
+   "autocmd FileType yml set ts=2 sw=2 et     " Yaml
    autocmd FileType javascript set ts=2 sw=2           " JS
    autocmd FileType ruby   set ts=2 sw=2               " Ruby
    autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
@@ -159,3 +172,11 @@ let g:go_highlight_fields = 1
 let g:go_highlight_types = 1
 let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
+
+" status line
+set statusline=
+set statusline+=%f\ %2*%m\ %1*%h
+set statusline+=%#warningmsg#
+set statusline+=%{fugitive#statusline()}
+set statusline+=%*
+set statusline+=%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}]\ %12.(%c:%l/%L%)
