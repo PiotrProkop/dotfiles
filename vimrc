@@ -14,13 +14,17 @@ call vundle#begin()
 " " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
 Bundle 'scrooloose/nerdtree'
-Bundle 'klen/python-mode'
 Plugin 'fatih/vim-go'
 Plugin 'majutsushi/tagbar'
 Plugin 'morhetz/gruvbox'
 Plugin 'junegunn/goyo.vim'
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'pearofducks/ansible-vim'
+Plugin 'Konfekt/FastFold'
+Plugin 'tpope/vim-fugitive'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'ervandew/supertab'
+Plugin 'klen/python-mode'
 
 call vundle#end()            " required
 
@@ -37,6 +41,9 @@ if has('gui_running')
 else
     set background=dark
 endif
+
+"Supertab
+let g:SuperTabDefaultCompletionType = "<c-n>"
 
 " Gruvbox colorscheme
 let g:gruvbox_contrast_dark = "hard"
@@ -132,7 +139,7 @@ let g:tagbar_type_go = {
 nmap <F8> :TagbarToggle<CR>
 
 " NERDTree
-nmap <leader>n :NERDTreeToggle<CR>
+nmap <leader>m :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
 
@@ -180,3 +187,25 @@ set statusline+=%#warningmsg#
 set statusline+=%{fugitive#statusline()}
 set statusline+=%*
 set statusline+=%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}]\ %12.(%c:%l/%L%)
+
+"python configuration
+let g:pymode_rope = 0
+
+" syntax highlighting
+let g:pymode_syntax = 1
+let g:pymode_syntax_all = 1
+let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+let g:pymode_syntax_space_errors = g:pymode_syntax_all
+
+" Don't autofold code
+let g:pymode_folding = 0
+
+" Documentation
+let g:pymode_doc = 1
+let g:pymode_doc_key = 'K'
+
+"Linting
+let g:pymode_lint = 1
+let g:pymode_lint_checker = "pyflakes,pep8"
+" Auto check on save
+let g:pymode_lint_write = 1
