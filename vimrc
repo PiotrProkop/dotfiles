@@ -25,6 +25,11 @@ Plugin 'tpope/vim-fugitive'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'ervandew/supertab'
 Plugin 'klen/python-mode'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
+Plugin 'jlanzarotta/bufexplorer'
+"Plugin 'ap/vim-buftabline'
 
 call vundle#end()            " required
 
@@ -45,6 +50,7 @@ endif
 "Supertab
 let g:SuperTabDefaultCompletionType = "<c-n>"
 
+color gruvbox
 " Gruvbox colorscheme
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
@@ -86,7 +92,16 @@ au FileType go nmap <Leader>r <Plug>(go-run)
 au FileType go nmap <Leader>b <Plug>(go-build)
 au FileType go nmap <Leader>t <Plug>(go-test)
 au FileType go nmap gd <Plug>(go-def-tab)
+au FileType go nmap <Leader>e <Plug>(go-rename)
 
+"Golang highligt 
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_types = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_build_constraints = 1
+let g:go_fmt_command = "goimports"
 
 "set mouse=a
 set number
@@ -139,6 +154,8 @@ let g:tagbar_type_go = {
 nmap <F8> :TagbarToggle<CR>
 
 " NERDTree
+"autocmd VimEnter * NERDTree
+"autocmd VimEnter * wincmd p
 nmap <leader>m :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
@@ -172,21 +189,16 @@ if has("autocmd")
    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
 
-"Golang highligt 
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_build_constraints = 1
 
 " status line
-set statusline=
-set statusline+=%f\ %2*%m\ %1*%h
-set statusline+=%#warningmsg#
-set statusline+=%{fugitive#statusline()}
-set statusline+=%*
-set statusline+=%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}]\ %12.(%c:%l/%L%)
+"set laststatus=2
+"set statusline=
+"set statusline+=%f\ %2*%m\ %1*%h
+"set statusline+=%#warningmsg#
+"set statusline+=%{fugitive#statusline()}
+"set statusline+=%*
+"set statusline+=%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}]\ %12.(%c:%l/%L%)
+"hi statusline ctermbg=red ctermfg=white
 
 "python configuration
 let g:pymode_rope = 0
@@ -209,3 +221,18 @@ let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
 " Auto check on save
 let g:pymode_lint_write = 1
+"CtrlP
+let g:ctrlp_map = '<c-p>'
+let g:ctrlp_cmd = 'CtrlP'
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_switch_buffer = 'et'
+"Working with buffers
+set hidden
+nnoremap bn :bnext<CR>
+nnoremap bp :bprev<CR>
+nnoremap bd :bdelete<CR>
+nnoremap bl :BufExplorer<CR>
+"Airline
+let g:airline_powerline_fonts = 1
+set laststatus=2
+let g:airline#extensions#tabline#enabled = 1
