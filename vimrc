@@ -111,7 +111,6 @@ set expandtab
 set showmatch
 let python_highlight_all = 1
 
-
 "hidding highligt of looking text
 noremap <C-n> :nohl<CR>
 vnoremap <C-n> :nohl<CR>
@@ -163,7 +162,6 @@ let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
 "sudo save
 cmap w!! w !sudo tee % >/dev/null
 
-
 "Easy window navigation
 map <C-h> <C-w>h
 map <C-j> <C-w>j
@@ -188,7 +186,6 @@ if has("autocmd")
    autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
-
 
 " status line
 "set laststatus=2
@@ -219,20 +216,23 @@ let g:pymode_doc_key = 'K'
 "Linting
 let g:pymode_lint = 1
 let g:pymode_lint_checker = "pyflakes,pep8"
+
 " Auto check on save
 let g:pymode_lint_write = 1
+
 "CtrlP
 let g:ctrlp_map = '<c-p>'
 let g:ctrlp_cmd = 'CtrlP'
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_switch_buffer = 'et'
+
 "Working with buffers
 set hidden
 nnoremap bn :bnext<CR>
 nnoremap bp :bprev<CR>
 nnoremap bd :bdelete<CR>
 nnoremap bl :BufExplorer<CR>
+
 "Airline
 let g:airline_powerline_fonts = 1
 set laststatus=2
-let g:airline#extensions#tabline#enabled = 1
