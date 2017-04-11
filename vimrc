@@ -55,6 +55,10 @@ color gruvbox
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
 "color gruvbox
+"
+"Highlight active column and line 
+set cursorline
+set cursorcolumn
 
 ""settings fo golnang
 let g:acp_enableAtStartup = 0
