@@ -29,6 +29,7 @@ Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'jlanzarotta/bufexplorer'
+Plugin 'christoomey/vim-tmux-navigator'
 "Plugin 'ap/vim-buftabline'
 
 call vundle#end()            " required
