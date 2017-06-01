@@ -103,10 +103,13 @@ au FileType go nmap <Leader>e <Plug>(go-rename)
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 1
-let g:go_highlight_types = 1
-let g:go_highlight_operators = 1
+let g:go_highlight_types = 0
+let g:go_highlight_operators = 0
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports"
+
+" stop syncing after 250 chars
+set synmaxcol=250
 
 "set mouse=a
 set number
