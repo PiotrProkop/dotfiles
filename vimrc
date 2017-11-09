@@ -4,35 +4,37 @@ set clipboard=unnamed        " Yank and paste with the system clipboard
 
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
 
-call vundle#begin()
-" " alternatively, pass a path where Vundle should install plugins
-" "call vundle#begin('~/some/path/here')
-"
-" " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
-Bundle 'scrooloose/nerdtree'
-Plugin 'fatih/vim-go'
-Plugin 'majutsushi/tagbar'
-Plugin 'morhetz/gruvbox'
-Plugin 'junegunn/goyo.vim'
-Plugin 'elixir-lang/vim-elixir'
-Plugin 'pearofducks/ansible-vim'
-Plugin 'Konfekt/FastFold'
-Plugin 'tpope/vim-fugitive'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'ervandew/supertab'
-Plugin 'klen/python-mode'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'jlanzarotta/bufexplorer'
-Plugin 'christoomey/vim-tmux-navigator'
-"Plugin 'ap/vim-buftabline'
-
-call vundle#end()            " required
+call plug#begin('~/.vim/bundle')
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'fatih/vim-go'
+Plug 'majutsushi/tagbar'
+Plug 'morhetz/gruvbox'
+Plug 'junegunn/goyo.vim'
+Plug 'elixir-lang/vim-elixir'
+Plug 'pearofducks/ansible-vim'
+Plug 'Konfekt/FastFold'
+Plug 'tpope/vim-fugitive'
+Plug 'ervandew/supertab'
+ "Plug 'klen/python-mode'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'jlanzarotta/bufexplorer'
+Plug 'scrooloose/syntastic'
+Plug 'christoomey/vim-tmux-navigator'
+ "Plug 'Valloric/YouCompleteMe'
+Plug 'racer-rust/vim-racer'
+Plug 'rust-lang/rust.vim'
+Plug 'fs111/pydoc.vim', { 'for': 'python' }
+Plug 'mduan/python.vim', { 'for': 'python' }
+Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+Plug 'gryf/pep8-vim', { 'for': 'python' }
+Plug 'gryf/pylint-vim', { 'for': 'python' }
+Plug 'gryf/python-syntax', { 'for': 'python' }
+Plug 'edkolev/tmuxline.vim'
+call plug#end()            " required
 
 filetype plugin indent on    " required
 
@@ -63,18 +65,13 @@ set cursorcolumn
 
 ""settings fo golnang
 let g:acp_enableAtStartup = 0
-" Use neocomplete.
+"Use neocomplete.
 let g:neocomplete#enable_at_startup = 1
-" Use smartcase.
+"Use smartcase.
 let g:neocomplete#enable_smart_case = 1
-" Set minimum syntax keyword length.
+"Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-
-" Plugin key-mappings for neocomplete
-inoremap <expr><C-g>     neocomplete#undo_completion()
-inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-" Recommended key-mappings.
+  
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
@@ -96,7 +93,7 @@ au FileType go nmap <Leader>gd <Plug>(go-doc)
 au FileType go nmap <Leader>r <Plug>(go-run)
 au FileType go nmap <Leader>b <Plug>(go-build)
 au FileType go nmap <Leader>t <Plug>(go-test)
-au FileType go nmap gd <Plug>(go-def-tab)
+"au FileType go nmap gd <Plug>(go-def-tab)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 
 "Golang highligt 
@@ -104,12 +101,18 @@ let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_types = 0
-let g:go_highlight_operators = 0
+let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports"
 
-" stop syncing after 250 chars
-set synmaxcol=250
+"Golang settings
+let g:go_metalinter_enabled = ['vet', 'errcheck']
+let g:go_metalinter_autosave = 1
+let g:go_metalinter_autosave_enabled = ['vet']
+let g:go_metalinter_deadline = "5s"
+"let g:go_auto_type_info = 1
+"let g:go_auto_sameids = 1
+set updatetime=100
 
 "set mouse=a
 set number
@@ -117,6 +120,7 @@ set ts=4
 set autoindent
 set expandtab
 set showmatch
+
 let python_highlight_all = 1
 
 "hidding highligt of looking text
@@ -165,7 +169,7 @@ nmap <F8> :TagbarToggle<CR>
 "autocmd VimEnter * wincmd p
 nmap <leader>m :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore = ['tmp', '.yardoc', 'pkg']
+let NERDTreeIgnore = ['tmp', '.yardoc']
 
 "sudo save
 cmap w!! w !sudo tee % >/dev/null
@@ -206,27 +210,31 @@ endif
 "hi statusline ctermbg=red ctermfg=white
 
 "python configuration
-let g:pymode_rope = 0
+"let g:pymode_rope = 0
+"
+"" syntax highlighting
+"let g:pymode_syntax = 1
+"let g:pymode_syntax_all = 1
+"let g:pymode_syntax_indent_errors = g:pymode_syntax_all
+"let g:pymode_syntax_space_errors = g:pymode_syntax_all
 
-" syntax highlighting
-let g:pymode_syntax = 1
-let g:pymode_syntax_all = 1
-let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-let g:pymode_syntax_space_errors = g:pymode_syntax_all
+"" Don't autofold code
+"let g:pymode_folding = 0
+"
+"" Documentation
+"let g:pymode_doc = 1
+"let g:pymode_doc_key = 'K'
+"
+""Linting
+"let g:pymode_lint = 1
+"let g:pymode_lint_checker = "pyflakes,pep8"
+"
+"" Auto check on save
+"let g:pymode_lint_write = 1
 
-" Don't autofold code
-let g:pymode_folding = 0
-
-" Documentation
-let g:pymode_doc = 1
-let g:pymode_doc_key = 'K'
-
-"Linting
-let g:pymode_lint = 1
-let g:pymode_lint_checker = "pyflakes,pep8"
-
-" Auto check on save
-let g:pymode_lint_write = 1
+"
+"let g:ycm_python_binary_path = '/usr/bin/python3'
+"let g:ycm_server_python_interpreter = '/usr/bin/python2'
 
 "CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -243,4 +251,61 @@ nnoremap bl :BufExplorer<CR>
 
 "Airline
 let g:airline_powerline_fonts = 1
+
 set laststatus=2
+" The Silver Searcher
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag\ --nogroup\ --nocolor
+
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+" bind \ (backward slash) to grep shortcut
+command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+nnoremap \ :Ag<SPACE>
+
+"vim airline
+set laststatus=2
+let g:airline_powerline_fonts = 1
+let g:bufferline_echo = 0
+let g:airline#extensions#whitespace#enabled = 0 " turn off the whitespace extension
+set noshowmode
+
+
+if !exists('g:airline_symbols')
+  let g:airline_symbols = {}
+endif
+"powerline symbols
+let g:airline_left_sep = ''
+let g:airline_left_alt_sep = ''
+let g:airline_right_sep = ''
+let g:airline_right_alt_sep = ''
+let g:airline_symbols.branch = ''
+let g:airline_symbols.readonly = ''
+let g:airline_symbols.linenr = ''
+let g:airline_symbols.columnr = ''
+
+"tmuxline theme disable autoset via airline
+let g:airline#extensions#tmuxline#enabled = 0
+"Rust
+"let g:ycm_rust_src_path = "/usr/src/rust/src/"
+"Rust 
+"let g:rustfmt_autosave = 1
+"let g:racer_cmd = "racer"
+"au FileType rust nmap gd <Plug>(rust-def)
+"au FileType rust nmap <leader>gd <Plug>(rust-doc)
+"let g:racer_experimental_completer = 1
+"autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/,$RUST_SRC_PATH/rusty-tags.vi
+"autocmd BufWrite *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" 
+
+" Python options
+let g:jedi#completions_enabled = 1
+let python_highlight_all=1
+augroup PythonCustomization
+  " highlight python self, when followed by a comma, a period or a parenth
+   :autocmd FileType python syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
+augroup END
