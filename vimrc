@@ -306,9 +306,11 @@ let g:airline#extensions#tmuxline#enabled = 0
 " Python options
 let g:jedi#completions_enabled = 1
 let python_highlight_all=1
+let g:jedi#show_call_signatures = "2"
 augroup PythonCustomization
   " highlight python self, when followed by a comma, a period or a parenth
    :autocmd FileType python syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
+   :autocmd FileType python setlocal completeopt-=preview
 augroup END
 
 
