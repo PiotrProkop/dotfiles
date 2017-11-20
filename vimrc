@@ -33,6 +33,8 @@ Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'gryf/pep8-vim', { 'for': 'python' }
 Plug 'gryf/pylint-vim', { 'for': 'python' }
 Plug 'gryf/python-syntax', { 'for': 'python' }
+Plug 'tpope/vim-commentary'
+Plug 'yuttie/comfortable-motion.vim'
 Plug 'edkolev/tmuxline.vim'
 call plug#end()            " required
 
@@ -170,6 +172,7 @@ nmap <F8> :TagbarToggle<CR>
 nmap <leader>m :NERDTreeToggle<CR>
 let NERDTreeHighlightCursorline=1
 let NERDTreeIgnore = ['tmp', '.yardoc']
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "sudo save
 cmap w!! w !sudo tee % >/dev/null
@@ -244,13 +247,10 @@ let g:ctrlp_switch_buffer = 'et'
 
 "Working with buffers
 set hidden
-nnoremap bn :bnext<CR>
-nnoremap bp :bprev<CR>
-nnoremap bd :bdelete<CR>
-nnoremap bl :BufExplorer<CR>
-
-"Airline
-let g:airline_powerline_fonts = 1
+nnoremap <space>n :bnext<CR>
+nnoremap <space>p :bprev<CR>
+nnoremap <space>d :bdelete<CR>
+nnoremap <space>l :BufExplorer<CR>
 
 set laststatus=2
 " The Silver Searcher
@@ -272,6 +272,7 @@ nnoremap \ :Ag<SPACE>
 set laststatus=2
 let g:airline_powerline_fonts = 1
 let g:bufferline_echo = 0
+let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#whitespace#enabled = 0 " turn off the whitespace extension
 set noshowmode
 
@@ -309,3 +310,9 @@ augroup PythonCustomization
   " highlight python self, when followed by a comma, a period or a parenth
    :autocmd FileType python syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
 augroup END
+
+
+"See how it works
+set mouse=a
+noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
+noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
