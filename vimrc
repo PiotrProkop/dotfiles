@@ -33,6 +33,7 @@ Plug 'davidhalter/jedi-vim', { 'for': 'python' }
 Plug 'gryf/pep8-vim', { 'for': 'python' }
 Plug 'gryf/pylint-vim', { 'for': 'python' }
 Plug 'gryf/python-syntax', { 'for': 'python' }
+Plug 'vim-scripts/indentpython', { 'for': 'python' }
 Plug 'tpope/vim-commentary'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'edkolev/tmuxline.vim'
@@ -307,6 +308,9 @@ let g:airline#extensions#tmuxline#enabled = 0
 let g:jedi#completions_enabled = 1
 let python_highlight_all=1
 let g:jedi#show_call_signatures = "2"
+let g:syntastic_python_checkers = ["python", "flake8", "pep8"]
+set textwidth=78
+set colorcolumn=+1
 augroup PythonCustomization
   " highlight python self, when followed by a comma, a period or a parenth
    :autocmd FileType python syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
