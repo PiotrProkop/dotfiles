@@ -6,6 +6,7 @@ filetype off                  " required
 
 
 call plug#begin('~/.vim/bundle')
+Plug 'Rykka/riv.vim', { 'for': 'rst' }
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'fatih/vim-go'
@@ -13,7 +14,6 @@ Plug 'majutsushi/tagbar'
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'elixir-lang/vim-elixir'
-Plug 'pearofducks/ansible-vim'
 Plug 'Konfekt/FastFold'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
@@ -37,6 +37,8 @@ Plug 'vim-scripts/indentpython', { 'for': 'python' }
 Plug 'tpope/vim-commentary'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'edkolev/tmuxline.vim'
+Plug 'stephpy/vim-yaml'
+Plug 'elzr/vim-json'
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -197,48 +199,12 @@ if has("autocmd")
    autocmd FileType go set ts=4 sw=4 et expandtab     " Go
    "autocmd FileType yml set ts=2 sw=2 et     " Yaml
    autocmd FileType javascript set ts=2 sw=2           " JS
+   autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
    autocmd FileType ruby   set ts=2 sw=2               " Ruby
    autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
    autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
-
-" status line
-"set laststatus=2
-"set statusline=
-"set statusline+=%f\ %2*%m\ %1*%h
-"set statusline+=%#warningmsg#
-"set statusline+=%{fugitive#statusline()}
-"set statusline+=%*
-"set statusline+=%r%=[%{&encoding}\ %{&fileformat}\ %{strlen(&ft)?&ft:'none'}]\ %12.(%c:%l/%L%)
-"hi statusline ctermbg=red ctermfg=white
-
-"python configuration
-"let g:pymode_rope = 0
-"
-"" syntax highlighting
-"let g:pymode_syntax = 1
-"let g:pymode_syntax_all = 1
-"let g:pymode_syntax_indent_errors = g:pymode_syntax_all
-"let g:pymode_syntax_space_errors = g:pymode_syntax_all
-
-"" Don't autofold code
-"let g:pymode_folding = 0
-"
-"" Documentation
-"let g:pymode_doc = 1
-"let g:pymode_doc_key = 'K'
-"
-""Linting
-"let g:pymode_lint = 1
-"let g:pymode_lint_checker = "pyflakes,pep8"
-"
-"" Auto check on save
-"let g:pymode_lint_write = 1
-
-"
-"let g:ycm_python_binary_path = '/usr/bin/python3'
-"let g:ycm_server_python_interpreter = '/usr/bin/python2'
 
 "CtrlP
 let g:ctrlp_map = '<c-p>'
@@ -293,17 +259,7 @@ let g:airline_symbols.columnr = ''
 
 "tmuxline theme disable autoset via airline
 let g:airline#extensions#tmuxline#enabled = 0
-"Rust
-"let g:ycm_rust_src_path = "/usr/src/rust/src/"
-"Rust 
-"let g:rustfmt_autosave = 1
-"let g:racer_cmd = "racer"
-"au FileType rust nmap gd <Plug>(rust-def)
-"au FileType rust nmap <leader>gd <Plug>(rust-doc)
-"let g:racer_experimental_completer = 1
-"autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/,$RUST_SRC_PATH/rusty-tags.vi
-"autocmd BufWrite *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" 
-
+"
 " Python options
 let g:jedi#completions_enabled = 1
 let python_highlight_all=1
@@ -317,8 +273,10 @@ augroup PythonCustomization
    :autocmd FileType python setlocal completeopt-=preview
 augroup END
 
-
 "See how it works
 set mouse=a
 noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
 noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
+
+"Json
+let g:vim_json_syntax_conceal = 0
