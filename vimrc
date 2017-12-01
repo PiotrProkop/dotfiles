@@ -280,3 +280,39 @@ noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
 
 "Json
 let g:vim_json_syntax_conceal = 0
+
+"Removing trailing spaces
+
+" Strip trailing whitespace option
+let stripTrailingWhitespace = 1
+
+"remove trailing whitespaces
+nnoremap <leader>e :call <SID>StripTrailingWhitespaces(1, 'n')<CR>
+vnoremap <silent> <Leader>e :<C-U>call <SID>StripTrailingWhitespaces(1, 'v')<CR>
+
+"remove all trailing whitespace for specified files before write
+autocmd BufWritePre * :call <SID>StripTrailingWhitespaces(0, 'n')
+
+" Remove trailing whitespace
+function <SID>StripTrailingWhitespaces(force, mode) range
+    if a:force != 1 && g:stripTrailingWhitespace == 0
+        return
+    endif
+
+    if a:force == 1 || &ft =~ 'python\|rst\|wiki\|javascript\|css\|html\|xml\|json'
+        " Preparation: save last search, and cursor position.
+        let _s=@/
+        let l = line(".")
+        let c = col(".")
+        " Do the business:
+        if a:mode == 'v'
+            '<,'>s/\s\+$//e
+        else
+            %s/\s\+$//e
+        endif
+        " Clean up: restore previous search history, and cursor position
+        let @/=_s
+        call cursor(l, c)
+    endif
+endfunction
+command -bang StripTrailingWhitespaces call <SID>StripTrailingWhitespaces(<bang>0, 'n')
