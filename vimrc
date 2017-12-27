@@ -17,14 +17,12 @@ Plug 'elixir-lang/vim-elixir'
 Plug 'Konfekt/FastFold'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
- "Plug 'klen/python-mode'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/syntastic'
 Plug 'christoomey/vim-tmux-navigator'
- "Plug 'Valloric/YouCompleteMe'
 Plug 'racer-rust/vim-racer'
 Plug 'rust-lang/rust.vim'
 Plug 'fs111/pydoc.vim', { 'for': 'python' }
@@ -76,7 +74,7 @@ let g:neocomplete#enable_at_startup = 1
 let g:neocomplete#enable_smart_case = 1
 "Set minimum syntax keyword length.
 let g:neocomplete#sources#syntax#min_keyword_length = 3
-  
+
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
@@ -122,6 +120,7 @@ set updatetime=100
 "set mouse=a
 set number
 set ts=4
+set sw=4
 set autoindent
 set expandtab
 set showmatch
@@ -140,32 +139,32 @@ inoremap <C-Z> <C-O>:update<CR>
 
 " TagBar
 let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
+            \ 'ctagstype' : 'go',
+            \ 'kinds'     : [
+            \ 'p:package',
+            \ 'i:imports:1',
+            \ 'c:constants',
+            \ 'v:variables',
+            \ 't:types',
+            \ 'n:interfaces',
+            \ 'w:fields',
+            \ 'e:embedded',
+            \ 'm:methods',
+            \ 'r:constructor',
+            \ 'f:functions'
+            \ ],
+            \ 'sro' : '.',
+            \ 'kind2scope' : {
+            \ 't' : 'ctype',
+            \ 'n' : 'ntype'
+            \ },
+            \ 'scope2kind' : {
+            \ 'ctype' : 't',
+            \ 'ntype' : 'n'
+            \ },
+            \ 'ctagsbin'  : 'gotags',
+            \ 'ctagsargs' : '-sort -silent'
+            \ }
 
 nmap <F8> :TagbarToggle<CR>
 
@@ -194,16 +193,16 @@ map <right> <nop>
 
 "Tabs per language
 if has("autocmd")
-   autocmd FileType python set ts=4 sw=4 et expandtab " Python
-   autocmd FileType php set ts=4 sw=4 et expandtab     " Php
-   autocmd FileType go set ts=4 sw=4 et expandtab     " Go
-   "autocmd FileType yml set ts=2 sw=2 et     " Yaml
-   autocmd FileType javascript set ts=2 sw=2           " JS
-   autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
-   autocmd FileType ruby   set ts=2 sw=2               " Ruby
-   autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
-   autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
-   autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
+    autocmd FileType python set ts=4 sw=4 et expandtab " Python
+    autocmd FileType php set ts=4 sw=4 et expandtab     " Php
+    autocmd FileType go set ts=4 sw=4 et expandtab     " Go
+    autocmd FileType vim set ts=4 sw=4 et
+    autocmd FileType javascript set ts=2 sw=2           " JS
+    autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
+    autocmd FileType ruby   set ts=2 sw=2               " Ruby
+    autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
+    autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
+    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
 
 "CtrlP
@@ -222,14 +221,14 @@ nnoremap <space>l :BufExplorer<CR>
 set laststatus=2
 " The Silver Searcher
 if executable('ag')
-  " Use ag over grep
-  set grepprg=ag\ --nogroup\ --nocolor
+    " Use ag over grep
+    set grepprg=ag\ --nogroup\ --nocolor
 
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
 
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
+    " ag is fast enough that CtrlP doesn't need to cache
+    let g:ctrlp_use_caching = 0
 endif
 " bind \ (backward slash) to grep shortcut
 command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
@@ -245,7 +244,7 @@ set noshowmode
 
 
 if !exists('g:airline_symbols')
-  let g:airline_symbols = {}
+    let g:airline_symbols = {}
 endif
 "powerline symbols
 let g:airline_left_sep = ''
@@ -260,18 +259,22 @@ let g:airline_symbols.columnr = ''
 "tmuxline theme disable autoset via airline
 let g:airline#extensions#tmuxline#enabled = 0
 "
-" Python options
-let g:jedi#completions_enabled = 1
-let python_highlight_all=1
-let g:jedi#show_call_signatures = "2"
-let g:syntastic_python_checkers = ["python", "flake8", "pep8"]
-set textwidth=78
-set colorcolumn=+1
-augroup PythonCustomization
-  " highlight python self, when followed by a comma, a period or a parenth
-   :autocmd FileType python syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
-   :autocmd FileType python setlocal completeopt-=preview
-augroup END
+
+function s:SetPythonSettings() 
+    " highlight python self, when followed by a comma, a period or a parenth
+    syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
+    setlocal completeopt-=preview
+    nnoremap <buffer> <C-]> :call jedi#goto_definitions()<CR>
+    nnoremap <buffer> <C-LeftMouse> :call jedi#goto_definitions()<CR>
+    " Python options
+    let g:jedi#completions_enabled = 1
+    let python_highlight_all=1
+    let g:jedi#show_call_signatures = "2"
+    let g:syntastic_python_checkers = ["python", "flake8", "pep8"]
+    set textwidth=78
+    set colorcolumn=+1
+endfunction
+:autocmd FileType python call <SID>SetPythonSettings()
 
 "See how it works
 set mouse=a
