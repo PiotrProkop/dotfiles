@@ -32,6 +32,8 @@ Plug 'gryf/pep8-vim', { 'for': 'python' }
 Plug 'gryf/pylint-vim', { 'for': 'python' }
 Plug 'gryf/python-syntax', { 'for': 'python' }
 Plug 'vim-scripts/indentpython', { 'for': 'python' }
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 Plug 'tpope/vim-commentary'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'edkolev/tmuxline.vim'
@@ -319,3 +321,7 @@ function <SID>StripTrailingWhitespaces(force, mode) range
     endif
 endfunction
 command -bang StripTrailingWhitespaces call <SID>StripTrailingWhitespaces(<bang>0, 'n')
+
+
+"UltiSnip
+let g:UltiSnipsExpandTrigger="<c-u>"
