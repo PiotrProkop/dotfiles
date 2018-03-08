@@ -39,6 +39,12 @@ Plug 'yuttie/comfortable-motion.vim'
 Plug 'edkolev/tmuxline.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'elzr/vim-json'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+if has('nvim')
+    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+endif
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -70,27 +76,9 @@ set cursorcolumn
 
 ""settings fo golnang
 let g:acp_enableAtStartup = 0
-"Use neocomplete.
-let g:neocomplete#enable_at_startup = 1
-"Use smartcase.
-let g:neocomplete#enable_smart_case = 1
-"Set minimum syntax keyword length.
-let g:neocomplete#sources#syntax#min_keyword_length = 3
 
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-    return neocomplete#close_popup() . "\<CR>"
-endfunction
-
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplete#close_popup()
-inoremap <expr><C-e>  neocomplete#cancel_popup()
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
 
 " Go related mappings
 au FileType go nmap <Leader>i <Plug>(go-info)
@@ -325,3 +313,10 @@ command -bang StripTrailingWhitespaces call <SID>StripTrailingWhitespaces(<bang>
 
 "UltiSnip
 let g:UltiSnipsExpandTrigger="<c-u>"
+
+" Change Color when entering Insert Mode
+ autocmd InsertEnter * highlight  CursorLine guibg=#323D3E
+ autocmd InsertEnter * highlight  Cursor guibg=#00AAFF
+
+" Live substitute
+set inccommand=split
