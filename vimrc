@@ -41,6 +41,7 @@ Plug 'stephpy/vim-yaml'
 Plug 'elzr/vim-json'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+Plug 'tmux-plugins/vim-tmux'
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
