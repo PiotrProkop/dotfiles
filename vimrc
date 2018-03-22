@@ -10,7 +10,7 @@ Plug 'Rykka/riv.vim', { 'for': 'rst' }
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/syntastic'
 Plug 'fatih/vim-go'
-Plug 'majutsushi/tagbar'
+Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
 Plug 'morhetz/gruvbox'
 Plug 'junegunn/goyo.vim'
 Plug 'elixir-lang/vim-elixir'
@@ -18,8 +18,6 @@ Plug 'Konfekt/FastFold'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/syntastic'
 Plug 'christoomey/vim-tmux-navigator'
@@ -42,6 +40,8 @@ Plug 'elzr/vim-json'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'tmux-plugins/vim-tmux'
+Plug 'gcmt/taboo.vim'
+Plug 'guns/xterm-color-table.vim'
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 else
@@ -209,7 +209,6 @@ nnoremap <space>p :bprev<CR>
 nnoremap <space>d :bdelete<CR>
 nnoremap <space>l :BufExplorer<CR>
 
-set laststatus=2
 " The Silver Searcher
 if executable('ag')
     " Use ag over grep
@@ -224,14 +223,6 @@ endif
 " bind \ (backward slash) to grep shortcut
 command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
 nnoremap \ :Ag<SPACE>
-
-"vim airline
-set laststatus=2
-let g:airline_powerline_fonts = 1
-let g:bufferline_echo = 0
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#whitespace#enabled = 0 " turn off the whitespace extension
-set noshowmode
 
 
 if !exists('g:airline_symbols')
@@ -321,3 +312,75 @@ let g:UltiSnipsExpandTrigger="<c-u>"
 
 " Live substitute
 set inccommand=split
+
+" Statusline
+let g:currentmode={
+    \ 'n'  : 'N ',
+    \ 'no' : 'N·Operator Pending ',
+    \ 'v'  : 'V ',
+    \ 'V'  : 'V·Line ',
+    \ '^V' : 'V·Block ',
+    \ 's'  : 'Select ',
+    \ 'S'  : 'S·Line ',
+    \ '^S' : 'S·Block ',
+    \ 'i'  : 'I ',
+    \ 'R'  : 'R ',
+    \ 'Rv' : 'V·Replace ',
+    \ 'c'  : 'Command ',
+    \ 'cv' : 'Vim Ex ',
+    \ 'ce' : 'Ex ',
+    \ 'r'  : 'Prompt ',
+    \ 'rm' : 'More ',
+    \ 'r?' : 'Confirm ',
+    \ '!'  : 'Shell ',
+    \ 't'  : 'Terminal '
+    \}
+
+" Automatically change the statusline color depending on mode
+function! ChangeStatuslineColor()
+  if (mode() =~# '\v(n|no)')
+    exe 'hi! StatusLine ctermfg=236'
+  elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
+    exe 'hi! StatusLine ctermfg=005'
+  elseif (mode() ==# 'i')
+    exe 'hi! StatusLine ctermfg=004'
+  else
+    exe 'hi! StatusLine ctermfg=006'
+  endif
+
+  return ''
+endfunction
+
+function! GitInfo()
+  let git = fugitive#head()
+  if git != ''
+    return '  '.fugitive#head()
+  else
+    return ''
+endfunction
+
+set noshowmode
+set laststatus=2
+set ruler
+set statusline=
+set statusline+=%3.3{ChangeStatuslineColor()}               " Changing the statusline color
+set statusline+=%0*\ %{toupper(g:currentmode[mode()])}   " Current mode
+" set statusline+=%3*%{GitInfo()}                      " Git Branch name
+set statusline+=%1*\ %t%m\ \                                 " File+modified
+set statusline+=\ %#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}             " Syntastic errors
+set statusline+=%*
+set statusline+=%2*\ %=                                  " Space
+set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttag('%s','','f'):''} " current tag
+set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttagtype('(%s)',''):''} " current tag type
+" set statusline+=%2*\ %y\                                 " FileType
+"set statusline+=%2*\ %{(&fenc!=''?&fenc:&enc)}\ \[%{&ff}]\ " Encoding & Fileformat
+set statusline+=%0*%3p%%\ \|                              " Rownumber/total (%) 
+set statusline+=%0*\ %l:%c\                               " Line/char
+
+hi User1 ctermfg=011
+hi User1 ctermbg=237
+hi User2 ctermfg=011
+hi User2 ctermbg=237
+hi User3 ctermfg=013
+hi User3 ctermbg=237
