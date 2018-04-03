@@ -12,13 +12,10 @@ Plug 'scrooloose/syntastic'
 Plug 'fatih/vim-go'
 Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
 Plug 'morhetz/gruvbox'
-Plug 'junegunn/goyo.vim'
 Plug 'elixir-lang/vim-elixir'
 Plug 'Konfekt/FastFold'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/syntastic'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'racer-rust/vim-racer'
@@ -34,7 +31,6 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'tpope/vim-commentary'
 Plug 'yuttie/comfortable-motion.vim'
-Plug 'edkolev/tmuxline.vim'
 Plug 'stephpy/vim-yaml'
 Plug 'elzr/vim-json'
 Plug 'tpope/vim-surround'
@@ -42,9 +38,10 @@ Plug 'tpope/vim-repeat'
 Plug 'tmux-plugins/vim-tmux'
 Plug 'gcmt/taboo.vim'
 Plug 'guns/xterm-color-table.vim'
+Plug 'Shougo/denite.nvim'
+
 if has('nvim')
     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
 endif
 call plug#end()            " required
 
@@ -69,8 +66,7 @@ color gruvbox
 " Gruvbox colorscheme
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
-"color gruvbox
-"
+
 "Highlight active column and line 
 set cursorline
 set cursorcolumn
@@ -196,51 +192,11 @@ if has("autocmd")
     autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 endif
 
-"CtrlP
-let g:ctrlp_map = '<c-p>'
-let g:ctrlp_cmd = 'CtrlP'
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_switch_buffer = 'et'
-
 "Working with buffers
 set hidden
 nnoremap <space>n :bnext<CR>
 nnoremap <space>p :bprev<CR>
 nnoremap <space>d :bdelete<CR>
-nnoremap <space>l :BufExplorer<CR>
-
-" The Silver Searcher
-if executable('ag')
-    " Use ag over grep
-    set grepprg=ag\ --nogroup\ --nocolor
-
-    " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-
-    " ag is fast enough that CtrlP doesn't need to cache
-    let g:ctrlp_use_caching = 0
-endif
-" bind \ (backward slash) to grep shortcut
-command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-nnoremap \ :Ag<SPACE>
-
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-"powerline symbols
-let g:airline_left_sep = ''
-let g:airline_left_alt_sep = ''
-let g:airline_right_sep = ''
-let g:airline_right_alt_sep = ''
-let g:airline_symbols.branch = ''
-let g:airline_symbols.readonly = ''
-let g:airline_symbols.linenr = ''
-let g:airline_symbols.columnr = ''
-
-"tmuxline theme disable autoset via airline
-let g:airline#extensions#tmuxline#enabled = 0
-"
 
 function s:SetPythonSettings() 
     " highlight python self, when followed by a comma, a period or a parenth
@@ -265,8 +221,6 @@ noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
 
 "Json
 let g:vim_json_syntax_conceal = 0
-
-"Removing trailing spaces
 
 " Strip trailing whitespace option
 let stripTrailingWhitespace = 1
@@ -307,11 +261,14 @@ command -bang StripTrailingWhitespaces call <SID>StripTrailingWhitespaces(<bang>
 let g:UltiSnipsExpandTrigger="<c-u>"
 
 " Change Color when entering Insert Mode
- autocmd InsertEnter * highlight  CursorLine guibg=#323D3E
- autocmd InsertEnter * highlight  Cursor guibg=#00AAFF
+autocmd InsertEnter * highlight  CursorLine guibg=#323D3E
+autocmd InsertEnter * highlight  Cursor guibg=#00AAFF
 
 " Live substitute
-set inccommand=split
+"
+if has('nvim')
+    set inccommand=split
+endif
 
 " Statusline
 let g:currentmode={
@@ -319,10 +276,9 @@ let g:currentmode={
     \ 'no' : 'N·Operator Pending ',
     \ 'v'  : 'V ',
     \ 'V'  : 'V·Line ',
-    \ '^V' : 'V·Block ',
+    \ "\<C-v>" : 'V·Block ',
     \ 's'  : 'Select ',
     \ 'S'  : 'S·Line ',
-    \ '^S' : 'S·Block ',
     \ 'i'  : 'I ',
     \ 'R'  : 'R ',
     \ 'Rv' : 'V·Replace ',
@@ -338,17 +294,17 @@ let g:currentmode={
 
 " Automatically change the statusline color depending on mode
 function! ChangeStatuslineColor()
-  if (mode() =~# '\v(n|no)')
-    exe 'hi! StatusLine ctermfg=236'
-  elseif (mode() =~# '\v(v|V)' || g:currentmode[mode()] ==# 'V·Block' || get(g:currentmode, mode(), '') ==# 't')
-    exe 'hi! StatusLine ctermfg=005'
-  elseif (mode() ==# 'i')
-    exe 'hi! StatusLine ctermfg=004'
-  else
-    exe 'hi! StatusLine ctermfg=006'
-  endif
-
-  return ''
+    let l:mode = mode()
+    if (l:mode =~# '\v(n|no)')
+        exe 'hi! StatusLine ctermfg=236'
+    elseif (l:mode =~# '\v(v|V)' || g:currentmode[l:mode] ==# 'V·Block' || get(g:currentmode, l:mode, '') ==# 't')
+        exe 'hi! StatusLine ctermfg=005'
+    elseif (l:mode ==# 'i')
+        exe 'hi! StatusLine ctermfg=004'
+    else
+        exe 'hi! StatusLine ctermfg=006'
+    endif
+    return ''
 endfunction
 
 function! GitInfo()
@@ -384,3 +340,49 @@ hi User2 ctermfg=011
 hi User2 ctermbg=237
 hi User3 ctermfg=013
 hi User3 ctermbg=237
+
+if has('nvim')
+  " reset 50% winheight on window resize
+  augroup deniteresize
+    autocmd!
+    autocmd VimResized,VimEnter * call denite#custom#option('default',
+          \'winheight', winheight(0) / 2)
+  augroup end
+
+  call denite#custom#option('default', {
+        \ 'prompt': '❯'
+        \ })
+  " Ag as file recursive searcher
+  call denite#custom#var('file_rec', 'command',
+        \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+
+  " Ag as grep command
+  call denite#custom#var('grep', 'command', ['ag'])
+  call denite#custom#var('grep', 'default_opts',
+          \ ['-i', '--vimgrep'])
+  call denite#custom#var('grep', 'recursive_opts', [])
+  call denite#custom#var('grep', 'pattern_opt', [])
+  call denite#custom#var('grep', 'separator', ['--'])
+  call denite#custom#var('grep', 'final_opts', [])
+  " Press escape to enter normal mode from insert mode
+  call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',
+        \'noremap')
+  " Press escape to do nothing in normal mode
+  call denite#custom#map('normal', '<Esc>', '<NOP>',
+        \'noremap')
+  call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
+        \'noremap')
+  call denite#custom#map('normal', '<C-v>', '<denite:do_action:vsplit>',
+        \'noremap')
+  call denite#custom#map('normal', 'dw', '<denite:delete_word_after_caret>',
+        \'noremap')
+endif
+
+nnoremap <C-p> :<C-u>Denite file_rec<CR>
+nnoremap <space>l :<C-u>Denite buffer<CR>
+nnoremap <leader><Space>l :<C-u>DeniteBufferDir buffer<CR>
+nnoremap <leader>8 :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
+nnoremap <leader>/ :<C-u>Denite grep:. -mode=normal<CR>
+nnoremap <leader><Space>/ :<C-u>DeniteBufferDir grep:. -mode=normal<CR>
+
+hi link deniteMatchedChar Special
