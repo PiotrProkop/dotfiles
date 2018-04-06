@@ -5,44 +5,49 @@ set clipboard=unnamed        " Yank and paste with the system clipboard
 filetype off                  " required
 
 
-call plug#begin('~/.vim/bundle')
-Plug 'Rykka/riv.vim', { 'for': 'rst' }
-Plug 'scrooloose/nerdtree'
-Plug 'scrooloose/syntastic'
-Plug 'fatih/vim-go'
-Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
-Plug 'morhetz/gruvbox'
-Plug 'elixir-lang/vim-elixir'
-Plug 'Konfekt/FastFold'
-Plug 'tpope/vim-fugitive'
-Plug 'ervandew/supertab'
-Plug 'scrooloose/syntastic'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'racer-rust/vim-racer'
-Plug 'rust-lang/rust.vim'
-Plug 'fs111/pydoc.vim', { 'for': 'python' }
-Plug 'mduan/python.vim', { 'for': 'python' }
-Plug 'davidhalter/jedi-vim', { 'for': 'python' }
-Plug 'gryf/pep8-vim', { 'for': 'python' }
-Plug 'gryf/pylint-vim', { 'for': 'python' }
-Plug 'gryf/python-syntax', { 'for': 'python' }
-Plug 'vim-scripts/indentpython', { 'for': 'python' }
-Plug 'SirVer/ultisnips'
-Plug 'honza/vim-snippets'
-Plug 'tpope/vim-commentary'
-Plug 'yuttie/comfortable-motion.vim'
-Plug 'stephpy/vim-yaml'
-Plug 'elzr/vim-json'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
-Plug 'tmux-plugins/vim-tmux'
-Plug 'gcmt/taboo.vim'
-Plug 'guns/xterm-color-table.vim'
-Plug 'Shougo/denite.nvim'
-
-if has('nvim')
-    Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-endif
+call plug#begin('~/.vim/plugged')
+ Plug 'Rykka/riv.vim', { 'for': 'rst' }
+ Plug 'scrooloose/nerdtree'
+ Plug 'scrooloose/syntastic'
+ Plug 'fatih/vim-go'
+ Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
+ Plug 'morhetz/gruvbox'
+ Plug 'elixir-lang/vim-elixir'
+ Plug 'Konfekt/FastFold'
+ Plug 'tpope/vim-fugitive'
+ Plug 'ervandew/supertab'
+ Plug 'scrooloose/syntastic'
+ Plug 'christoomey/vim-tmux-navigator'
+ Plug 'racer-rust/vim-racer'
+ Plug 'rust-lang/rust.vim'
+ Plug 'fs111/pydoc.vim', { 'for': 'python' }
+ Plug 'mduan/python.vim', { 'for': 'python' }
+ Plug 'davidhalter/jedi-vim', { 'for': 'python' }
+ Plug 'gryf/pep8-vim', { 'for': 'python' }
+ Plug 'gryf/pylint-vim', { 'for': 'python' }
+ Plug 'gryf/python-syntax', { 'for': 'python' }
+ Plug 'vim-scripts/indentpython', { 'for': 'python' }
+ Plug 'SirVer/ultisnips'
+ Plug 'honza/vim-snippets'
+ Plug 'tpope/vim-commentary'
+ Plug 'yuttie/comfortable-motion.vim'
+ Plug 'stephpy/vim-yaml'
+ Plug 'elzr/vim-json'
+ Plug 'tpope/vim-surround'
+ Plug 'tpope/vim-repeat'
+ Plug 'tmux-plugins/vim-tmux'
+ Plug 'gcmt/taboo.vim'
+ Plug 'guns/xterm-color-table.vim'
+ Plug 'Shougo/denite.nvim'
+ Plug 'semanser/vim-outdated-plugins'
+ Plug 'Shougo/deoplete.nvim'
+ Plug 'zchee/deoplete-go', { 'for': 'go' }
+ Plug 'roxma/nvim-yarp'
+ Plug 'roxma/vim-hug-neovim-rpc'
+" if has('nvim')
+"     Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
+"     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+" endif
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -76,7 +81,6 @@ let g:acp_enableAtStartup = 0
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
-
 " Go related mappings
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
