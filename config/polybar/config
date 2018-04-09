@@ -1,0 +1,200 @@
+[bar/top]
+monitor = ${env:MONITOR:}
+
+width = 100%
+height = 30
+offset-x = 0
+offset-y = -1 
+bottom = false
+
+background=${xrdb:background}
+foreground = ${xrdb:color15}
+
+underline-size = 4
+underline-color = ${xrdb:color2}
+
+spacing = 0.5
+padding-left = 0
+padding-right = 0
+module-margin-left = 0 
+module-margin-right = 0
+
+; font-0 = Inconsolata for Powerline:pixelsize=12;0 */
+font-0 = Hack:size=12;0
+font-1 = FontAwesome:size=12;0
+font-2 = Inconsolata for Powerline:pixelsize=10;0
+font-3 = Inconsolata for Powerline:pixelsize=8
+
+modules-left = i3
+modules-center = xwindow
+modules-right = battery  my-volume date
+
+; MODULES
+
+[module/i3]
+fuzzy-match = true
+type=internal/i3
+pin-workspaces = true
+strip-wsnumbers = true
+ws-icon-0 =  ;
+ws-icon-1 =  ;
+ws-icon-2 =  ;
+ws-icon-3 =  ;
+ws-icon-4 =  ;
+ws-icon-5 =  ;
+ws-icon-6 =  ;
+label-focused=%icon% 
+label-focused-foreground = #ffffff
+label-focused-background = #3f3f3f
+label-focused-underline = #fba922
+label-focused-padding = 3
+label-unfocused=%icon%
+label-unfocused-padding = 3
+label-visible = %icon%
+label-visible-underline = #555555
+label-visible-padding = 3
+; Separator in between workspaces
+label-separator = |
+label-separator-padding = 2
+label-separator-foreground = #ffb52a
+
+
+[module/wlan]
+type = internal/network
+interface = wlo1
+interval = 3.0
+
+format-connected = <ramp-signal> <label-connected>
+label-connected = %essid%
+label-disconnected =  WLan d/c
+ramp-signal-0 = 
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:120:...%
+label-padding = 4
+
+[module/date]
+type = internal/date
+
+; Seconds to sleep between updates
+interval = 1.0
+
+; See "man date" for details on how to format the date string
+; NOTE: if you want to use syntax tags here you need to use %%{...}
+date = %b %d 
+
+; Optional time format
+time = %I:%M
+
+; if `date-alt` or `time-alt` is defined, clicking
+; the module will toggle between formats
+date-alt = %A, %d %B %Y
+time-alt = %H:%M:%S
+
+label =    %date%      %time%
+format = <label>
+;format-background = #ddffffff
+;format-foreground = #333
+format-padding = 3
+
+[module/padding]
+type = custom/text
+content =        
+content-foreground = #00000000
+content-background = #55000000
+
+[module/battery]
+type = internal/battery
+
+full-at = 99
+
+battery = BAT0
+adapter = AC
+
+poll-interval = 5
+
+format-charging = <animation-charging>  <label-charging>
+format-discharging = <ramp-capacity>  <label-discharging>
+format-full = <ramp-capacity>  <label-full>
+label-charging = %percentage%%
+label-discharging = %percentage%%
+label-full = %percentage%%
+format-charging-padding = 2
+format-discharging-padding = 2
+format-full-padding = 2
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+
+[module/backlight]
+type = internal/backlight
+
+card = intel_backlight
+enable-scroll = true
+
+format = <ramp> <label>
+label = %percentage%
+
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+; Sink to be used, if it exists (find using `pacmd list-sinks`, name field)
+; If not, uses default sink
+sink = alsa_output.usb-Kingston_HyperX_7.1_Audio_00000000-00.analog-stereo
+
+
+[module/powermenu]
+type = custom/menu
+
+label-open =    
+;label-open-background = #dd0000
+;label-open-foreground = #fff
+label-close = cancel
+;label-close-background = #dd0000
+;label-close-foreground = #fff
+label-open-padding = 3
+label-close-padding = 3 
+
+menu-0-0 = reboot
+menu-0-0-exec = menu-open-1
+menu-0-1 = power off
+menu-0-1-exec = menu-open-2
+menu-0-0-padding = 3
+menu-0-1-padding = 3
+
+menu-1-0 = reboot?  
+menu-1-0-exec = sudo reboot
+menu-1-0-padding = 3
+
+menu-2-0 = power off?  
+menu-2-0-exec = sudo poweroff
+menu-2-0-padding = 3
+
+[module/my-volume]
+type = custom/script
+
+exec = /home/pprokop/.i3/scripts/volume_control.py
+
+interval = 1
+
+click-left = pavucontrol
+click-middle = pavucontrol
+click-right = pavucontrol
+

@@ -345,42 +345,40 @@ hi User2 ctermbg=237
 hi User3 ctermfg=013
 hi User3 ctermbg=237
 
-if has('nvim')
-  " reset 50% winheight on window resize
-  augroup deniteresize
-    autocmd!
-    autocmd VimResized,VimEnter * call denite#custom#option('default',
-          \'winheight', winheight(0) / 2)
-  augroup end
+" reset 50% winheight on window resize
+augroup deniteresize
+autocmd!
+autocmd VimResized,VimEnter * call denite#custom#option('default',
+      \'winheight', winheight(0) / 2)
+augroup end
 
-  call denite#custom#option('default', {
-        \ 'prompt': '❯'
-        \ })
-  " Ag as file recursive searcher
-  call denite#custom#var('file_rec', 'command',
-        \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
+call denite#custom#option('default', {
+    \ 'prompt': '❯'
+    \ })
+" Ag as file recursive searcher
+call denite#custom#var('file_rec', 'command',
+    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
 
-  " Ag as grep command
-  call denite#custom#var('grep', 'command', ['ag'])
-  call denite#custom#var('grep', 'default_opts',
-          \ ['-i', '--vimgrep'])
-  call denite#custom#var('grep', 'recursive_opts', [])
-  call denite#custom#var('grep', 'pattern_opt', [])
-  call denite#custom#var('grep', 'separator', ['--'])
-  call denite#custom#var('grep', 'final_opts', [])
-  " Press escape to enter normal mode from insert mode
-  call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',
-        \'noremap')
-  " Press escape to do nothing in normal mode
-  call denite#custom#map('normal', '<Esc>', '<NOP>',
-        \'noremap')
-  call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
-        \'noremap')
-  call denite#custom#map('normal', '<C-v>', '<denite:do_action:vsplit>',
-        \'noremap')
-  call denite#custom#map('normal', 'dw', '<denite:delete_word_after_caret>',
-        \'noremap')
-endif
+" Ag as grep command
+call denite#custom#var('grep', 'command', ['ag'])
+call denite#custom#var('grep', 'default_opts',
+      \ ['-i', '--vimgrep'])
+call denite#custom#var('grep', 'recursive_opts', [])
+call denite#custom#var('grep', 'pattern_opt', [])
+call denite#custom#var('grep', 'separator', ['--'])
+call denite#custom#var('grep', 'final_opts', [])
+" Press escape to enter normal mode from insert mode
+call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',
+    \'noremap')
+" Press escape to do nothing in normal mode
+call denite#custom#map('normal', '<Esc>', '<NOP>',
+    \'noremap')
+call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
+    \'noremap')
+call denite#custom#map('normal', '<C-v>', '<denite:do_action:vsplit>',
+    \'noremap')
+call denite#custom#map('normal', 'dw', '<denite:delete_word_after_caret>',
+    \'noremap')
 
 nnoremap <C-p> :<C-u>Denite file_rec<CR>
 nnoremap <space>l :<C-u>Denite buffer<CR>
