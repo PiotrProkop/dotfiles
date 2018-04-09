@@ -44,13 +44,13 @@ call plug#begin('~/.vim/plugged')
  Plug 'zchee/deoplete-go', { 'for': 'go' }
  Plug 'roxma/nvim-yarp'
  Plug 'roxma/vim-hug-neovim-rpc'
-" if has('nvim')
-"     Plug 'nsf/gocode', { 'rtp': 'nvim', 'do': '~/.config/nvim/plugged/gocode/nvim/symlink.sh' }
-"     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" endif
 call plug#end()            " required
 
 filetype plugin indent on    " required
+" better menu
+set wildmenu
+" search while typing
+set incsearch
 
 syntax on
 "change mapleader
