@@ -81,6 +81,8 @@ let g:acp_enableAtStartup = 0
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
+let g:deoplete#num_processes = 4
+let g:deoplete#max_list = 500
 " Go related mappings
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
@@ -183,18 +185,16 @@ map <left> <nop>
 map <right> <nop>
 
 "Tabs per language
-if has("autocmd")
-    autocmd FileType python set ts=4 sw=4 et expandtab " Python
-    autocmd FileType php set ts=4 sw=4 et expandtab     " Php
-    autocmd FileType go set ts=4 sw=4 et expandtab     " Go
-    autocmd FileType vim set ts=4 sw=4 et
-    autocmd FileType javascript set ts=2 sw=2           " JS
-    autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
-    autocmd FileType ruby   set ts=2 sw=2               " Ruby
-    autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
-    autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
-    autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
-endif
+autocmd FileType python set ts=4 sw=4 et expandtab " Python
+autocmd FileType php set ts=4 sw=4 et expandtab     " Php
+autocmd FileType go set ts=4 sw=4 et expandtab     " Go
+autocmd FileType vim set ts=4 sw=4 et
+autocmd FileType javascript set ts=2 sw=2           " JS
+autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
+autocmd FileType ruby   set ts=2 sw=2               " Ruby
+autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
+autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
+autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
 
 "Working with buffers
 set hidden
@@ -333,7 +333,7 @@ set statusline+=%*
 set statusline+=%2*\ %=                                  " Space
 set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttag('%s','','f'):''} " current tag
 set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttagtype('(%s)',''):''} " current tag type
-" set statusline+=%2*\ %y\                                 " FileType
+set statusline+=%2*\ %y\                                 " FileType
 "set statusline+=%2*\ %{(&fenc!=''?&fenc:&enc)}\ \[%{&ff}]\ " Encoding & Fileformat
 set statusline+=%0*%3p%%\ \|                              " Rownumber/total (%) 
 set statusline+=%0*\ %l:%c\                               " Line/char
