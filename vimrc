@@ -3,7 +3,9 @@ set nobackup                  " Don't keep backup file
 set clipboard=unnamed        " Yank and paste with the system clipboard
 
 filetype off                  " required
-
+if has('python3') && !has('patch-8.1.201')
+    silent! python3 1
+endif
 
 call plug#begin('~/.vim/plugged')
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
@@ -26,6 +28,7 @@ call plug#begin('~/.vim/plugged')
  Plug 'gryf/pep8-vim', { 'for': 'python' }
  Plug 'gryf/pylint-vim', { 'for': 'python' }
  Plug 'gryf/python-syntax', { 'for': 'python' }
+ Plug 'zchee/deoplete-jedi', { 'for': 'python' }
  Plug 'vim-scripts/indentpython', { 'for': 'python' }
  Plug 'SirVer/ultisnips'
  Plug 'honza/vim-snippets'
@@ -34,14 +37,14 @@ call plug#begin('~/.vim/plugged')
  Plug 'stephpy/vim-yaml'
  Plug 'elzr/vim-json'
  Plug 'tpope/vim-surround'
+ Plug 'tpope/vim-unimpaired'
  Plug 'tpope/vim-repeat'
  Plug 'tmux-plugins/vim-tmux'
  Plug 'gcmt/taboo.vim'
  Plug 'guns/xterm-color-table.vim'
  Plug 'Shougo/denite.nvim'
- Plug 'semanser/vim-outdated-plugins'
  Plug 'Shougo/deoplete.nvim'
- Plug 'zchee/deoplete-go', { 'for': 'go' }
+ Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make' }
  Plug 'roxma/nvim-yarp'
  Plug 'roxma/vim-hug-neovim-rpc'
 call plug#end()            " required
@@ -59,7 +62,13 @@ let mapleader=","
 let g:ansible_options = {'ignore_blank_lines': 0}
 
 if has('gui_running')
-    set background=light
+    set background=dark
+    set guioptions=
+    set guifont=Hack:h16
+    set noerrorbells
+    set novisualbell
+    set t_vb=
+    autocmd! GUIEnter * set vb t_vb=
 else
     set background=dark
 endif
@@ -72,9 +81,10 @@ color gruvbox
 let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
 
-"Highlight active column and line 
-set cursorline
-set cursorcolumn
+"Highlight active column and line
+" set cursorline
+" set cursorcolumn
+set lazyredraw
 
 ""settings fo golnang
 let g:acp_enableAtStartup = 0
@@ -92,7 +102,7 @@ au FileType go nmap <Leader>t <Plug>(go-test)
 "au FileType go nmap gd <Plug>(go-def-tab)
 au FileType go nmap <Leader>e <Plug>(go-rename)
 
-"Golang highligt 
+"Golang highligt
 let g:go_highlight_functions = 1
 let g:go_highlight_methods = 1
 let g:go_highlight_fields = 1
@@ -103,7 +113,7 @@ let g:go_fmt_command = "goimports"
 
 "Golang settings
 let g:go_metalinter_enabled = ['vet', 'errcheck']
-let g:go_metalinter_autosave = 1
+let g:go_metalinter_autosave = 0
 let g:go_metalinter_autosave_enabled = ['vet']
 let g:go_metalinter_deadline = "5s"
 "let g:go_auto_type_info = 1
@@ -194,7 +204,10 @@ autocmd FileType json set ts=2 sw=2 sts=0 expandtab "json
 autocmd FileType ruby   set ts=2 sw=2               " Ruby
 autocmd FileType c,cpp  set ts=4 sw=4 cindent       " C & C++
 autocmd FileType sh set ts=2 sw=2 et expandtab " Bash
-autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4" DocBook, HTML, XHT    ML, and XML
+autocmd FileType docbk,html,xhtml,xml set ts=4 sw=4 " DocBook, HTML, XHT    ML, and XML
+" Yaml
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType yml setlocal ts=2 sts=2 sw=2 expandtab
 
 "Working with buffers
 set hidden
@@ -202,18 +215,21 @@ nnoremap <space>n :bnext<CR>
 nnoremap <space>p :bprev<CR>
 nnoremap <space>d :bdelete<CR>
 
-function s:SetPythonSettings() 
+function s:SetPythonSettings()
     " highlight python self, when followed by a comma, a period or a parenth
     syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
     setlocal completeopt-=preview
     nnoremap <buffer> <C-]> :call jedi#goto_definitions()<CR>
     nnoremap <buffer> <C-LeftMouse> :call jedi#goto_definitions()<CR>
     " Python options
-    let g:jedi#completions_enabled = 1
+    let g:jedi#completions_enabled = 0
     let python_highlight_all=1
     let g:jedi#show_call_signatures = "2"
-    let g:syntastic_python_checkers = ["python", "flake8", "pep8"]
-    set textwidth=78
+    let g:syntastic_python_checkers = ["python3", "pycodestyle"]
+    let g:syntastic_python_python_exec = 'python3'
+    let g:deoplete#sources#jedi#enable_typeinfo = 0
+    let g:jedi#force_py_version = 2
+    set textwidth=88
     set colorcolumn=+1
 endfunction
 :autocmd FileType python call <SID>SetPythonSettings()
@@ -335,7 +351,7 @@ set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttag('%s','','f'):''} " c
 set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttagtype('(%s)',''):''} " current tag type
 set statusline+=%2*\ %y\                                 " FileType
 "set statusline+=%2*\ %{(&fenc!=''?&fenc:&enc)}\ \[%{&ff}]\ " Encoding & Fileformat
-set statusline+=%0*%3p%%\ \|                              " Rownumber/total (%) 
+set statusline+=%0*%3p%%\ \|                              " Rownumber/total (%)
 set statusline+=%0*\ %l:%c\                               " Line/char
 
 hi User1 ctermfg=011
