@@ -1,6 +1,7 @@
 set nocompatible              " be iMproved, required
 set nobackup                  " Don't keep backup file
 set clipboard=unnamed        " Yank and paste with the system clipboard
+set encoding=utf-8
 
 filetype off                  " required
 if has('python3') && !has('patch-8.1.201')
@@ -8,6 +9,7 @@ if has('python3') && !has('patch-8.1.201')
 endif
 
 call plug#begin('~/.vim/plugged')
+ Plug 'habamax/vim-asciidoctor'
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
  Plug 'scrooloose/nerdtree'
  Plug 'scrooloose/syntastic'
@@ -42,7 +44,8 @@ call plug#begin('~/.vim/plugged')
  Plug 'tmux-plugins/vim-tmux'
  Plug 'gcmt/taboo.vim'
  Plug 'guns/xterm-color-table.vim'
- Plug 'Shougo/denite.nvim'
+ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+ Plug 'junegunn/fzf.vim'
  Plug 'Shougo/deoplete.nvim'
  Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make' }
  Plug 'roxma/nvim-yarp'
@@ -64,7 +67,7 @@ let g:ansible_options = {'ignore_blank_lines': 0}
 if has('gui_running')
     set background=dark
     set guioptions=
-    set guifont=Hack:h16
+    set guifont=Hack\ 14
     set noerrorbells
     set novisualbell
     set t_vb=
@@ -93,6 +96,7 @@ let g:acp_enableAtStartup = 0
 let g:deoplete#enable_at_startup = 1
 let g:deoplete#num_processes = 4
 let g:deoplete#max_list = 500
+
 " Go related mappings
 au FileType go nmap <Leader>i <Plug>(go-info)
 au FileType go nmap <Leader>gd <Plug>(go-doc)
@@ -118,6 +122,8 @@ let g:go_metalinter_autosave_enabled = ['vet']
 let g:go_metalinter_deadline = "5s"
 "let g:go_auto_type_info = 1
 "let g:go_auto_sameids = 1
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 set updatetime=100
 
 "set mouse=a
@@ -361,46 +367,5 @@ hi User2 ctermbg=237
 hi User3 ctermfg=013
 hi User3 ctermbg=237
 
-" reset 50% winheight on window resize
-augroup deniteresize
-autocmd!
-autocmd VimResized,VimEnter * call denite#custom#option('default',
-      \'winheight', winheight(0) / 2)
-augroup end
-
-call denite#custom#option('default', {
-    \ 'prompt': '❯'
-    \ })
-" Ag as file recursive searcher
-call denite#custom#var('file_rec', 'command',
-    \ ['ag', '--follow', '--nocolor', '--nogroup', '-g', ''])
-
-" Ag as grep command
-call denite#custom#var('grep', 'command', ['ag'])
-call denite#custom#var('grep', 'default_opts',
-      \ ['-i', '--vimgrep'])
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', [])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
-" Press escape to enter normal mode from insert mode
-call denite#custom#map('insert', '<Esc>', '<denite:enter_mode:normal>',
-    \'noremap')
-" Press escape to do nothing in normal mode
-call denite#custom#map('normal', '<Esc>', '<NOP>',
-    \'noremap')
-call denite#custom#map('insert', '<C-v>', '<denite:do_action:vsplit>',
-    \'noremap')
-call denite#custom#map('normal', '<C-v>', '<denite:do_action:vsplit>',
-    \'noremap')
-call denite#custom#map('normal', 'dw', '<denite:delete_word_after_caret>',
-    \'noremap')
-
-nnoremap <C-p> :<C-u>Denite file_rec<CR>
-nnoremap <space>l :<C-u>Denite buffer<CR>
-nnoremap <leader><Space>l :<C-u>DeniteBufferDir buffer<CR>
-nnoremap <leader>8 :<C-u>DeniteCursorWord grep:. -mode=normal<CR>
-nnoremap <leader>/ :<C-u>Denite grep:. -mode=normal<CR>
-nnoremap <leader><Space>/ :<C-u>DeniteBufferDir grep:. -mode=normal<CR>
-
-hi link deniteMatchedChar Special
+nnoremap <C-p> :<C-u>FZF<CR>
+nnoremap <space>l :<C-u>Buffer<CR>
