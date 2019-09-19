@@ -4,11 +4,15 @@ set clipboard=unnamed        " Yank and paste with the system clipboard
 set encoding=utf-8
 
 filetype off                  " required
-if has('python3') && !has('patch-8.1.201')
+if !has('nvim') && has('python3') && !has('patch-8.1.201')
     silent! python3 1
 endif
 
-call plug#begin('~/.vim/plugged')
+if has('nvim')
+    call plug#begin('~/.local/share/nvim/plugged')
+else
+    call plug#begin('~/.vim/plugged')
+endif
  Plug 'habamax/vim-asciidoctor'
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
  Plug 'scrooloose/nerdtree'
@@ -46,12 +50,15 @@ call plug#begin('~/.vim/plugged')
  Plug 'guns/xterm-color-table.vim'
  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
  Plug 'junegunn/fzf.vim'
- Plug 'Shougo/deoplete.nvim'
+ if has('nvim')
+     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+ else
+     Plug 'Shougo/deoplete.nvim'
+     Plug 'roxma/nvim-yarp'
+     Plug 'roxma/vim-hug-neovim-rpc'
+ endif
  Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make' }
- Plug 'roxma/nvim-yarp'
- Plug 'roxma/vim-hug-neovim-rpc'
  " Plug 'python/black'
-
 call plug#end()            " required
 
 filetype plugin indent on    " required
