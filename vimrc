@@ -13,6 +13,7 @@ call plug#begin('~/.vim/plugged')
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
  Plug 'scrooloose/nerdtree'
  Plug 'scrooloose/syntastic'
+ Plug 'dense-analysis/ale'
  Plug 'fatih/vim-go'
  Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
  Plug 'morhetz/gruvbox'
@@ -20,7 +21,6 @@ call plug#begin('~/.vim/plugged')
  Plug 'Konfekt/FastFold'
  Plug 'tpope/vim-fugitive'
  Plug 'ervandew/supertab'
- Plug 'scrooloose/syntastic'
  Plug 'christoomey/vim-tmux-navigator'
  Plug 'racer-rust/vim-racer'
  Plug 'rust-lang/rust.vim'
@@ -50,6 +50,8 @@ call plug#begin('~/.vim/plugged')
  Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make' }
  Plug 'roxma/nvim-yarp'
  Plug 'roxma/vim-hug-neovim-rpc'
+ " Plug 'python/black'
+
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -125,6 +127,16 @@ let g:go_metalinter_deadline = "5s"
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 set updatetime=100
+
+"Go LSP
+
+" if executable('gopls')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'gopls',
+"         \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
+"         \ 'whitelist': ['go'],
+"         \ })
+" endif
 
 "set mouse=a
 set number
@@ -220,6 +232,19 @@ set hidden
 nnoremap <space>n :bnext<CR>
 nnoremap <space>p :bprev<CR>
 nnoremap <space>d :bdelete<CR>
+let g:ale_fixers = {
+            \ "*": ['remove_trailing_lines', 'trim_whitespace'],
+            \}
+" Set this variable to 1 to fix files when you save them.
+let g:ale_fix_on_save = 1
+" Only run linting when saving the file
+let g:ale_lint_on_enter = 0
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+" disable loclist and enable quickfix
+let g:ale_set_loclist = 1
+let g:ale_set_quickfix = 0
+let g:ale_open_list = 1
 
 function s:SetPythonSettings()
     " highlight python self, when followed by a comma, a period or a parenth
@@ -231,14 +256,24 @@ function s:SetPythonSettings()
     let g:jedi#completions_enabled = 0
     let python_highlight_all=1
     let g:jedi#show_call_signatures = "2"
-    let g:syntastic_python_checkers = ["python3", "pycodestyle"]
+    let g:ale_linters_explicit = 1
+    let g:ale_python_pylint_change_directory = 0
+    let g:ale_linters = {
+                \ 'python': ['flake8', 'pylint'],
+                \}
+    let g:ale_python_mypy_options = "--namespace-package"
+
+    let g:ale_fixers = {
+                \ 'python': ['black'],
+                \}
     let g:syntastic_python_python_exec = 'python3'
     let g:deoplete#sources#jedi#enable_typeinfo = 0
-    let g:jedi#force_py_version = 2
+    let g:jedi#force_py_version = 3
     set textwidth=88
     set colorcolumn=+1
+    " autocmd BufWritePre *.py execute ':Black'
 endfunction
-:autocmd FileType python call <SID>SetPythonSettings()
+autocmd FileType python call <SID>SetPythonSettings()
 
 "See how it works
 set mouse=a
