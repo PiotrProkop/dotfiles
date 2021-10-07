@@ -1,7 +1,10 @@
 set nocompatible              " be iMproved, required
 set nobackup                  " Don't keep backup file
 set clipboard=unnamed        " Yank and paste with the system clipboard
+set clipboard+=unnamedplus " Yank and paste with the system clipboard
 set encoding=utf-8
+let g:python3_host_prog  = '/usr/bin/python3'
+set relativenumber
 
 filetype off                  " required
 if !has('nvim') && has('python3') && !has('patch-8.1.201')
@@ -16,28 +19,11 @@ endif
  Plug 'habamax/vim-asciidoctor'
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
  Plug 'scrooloose/nerdtree'
- Plug 'scrooloose/syntastic'
- Plug 'dense-analysis/ale'
  Plug 'fatih/vim-go'
  Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
  Plug 'morhetz/gruvbox'
- Plug 'elixir-lang/vim-elixir'
- Plug 'Konfekt/FastFold'
  Plug 'tpope/vim-fugitive'
- Plug 'ervandew/supertab'
  Plug 'christoomey/vim-tmux-navigator'
- Plug 'racer-rust/vim-racer'
- Plug 'rust-lang/rust.vim'
- Plug 'fs111/pydoc.vim', { 'for': 'python' }
- Plug 'mduan/python.vim', { 'for': 'python' }
- Plug 'davidhalter/jedi-vim', { 'for': 'python' }
- Plug 'gryf/pep8-vim', { 'for': 'python' }
- Plug 'gryf/pylint-vim', { 'for': 'python' }
- Plug 'gryf/python-syntax', { 'for': 'python' }
- Plug 'zchee/deoplete-jedi', { 'for': 'python' }
- Plug 'vim-scripts/indentpython', { 'for': 'python' }
- Plug 'SirVer/ultisnips'
- Plug 'honza/vim-snippets'
  Plug 'tpope/vim-commentary'
  Plug 'yuttie/comfortable-motion.vim'
  Plug 'stephpy/vim-yaml'
@@ -50,18 +36,25 @@ endif
  Plug 'guns/xterm-color-table.vim'
  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
  Plug 'junegunn/fzf.vim'
- if has('nvim')
-     Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
- else
-     Plug 'Shougo/deoplete.nvim'
-     Plug 'roxma/nvim-yarp'
-     Plug 'roxma/vim-hug-neovim-rpc'
- endif
- Plug 'zchee/deoplete-go', { 'for': 'go', 'do': 'make' }
- " Plug 'python/black'
+ Plug 'hashivim/vim-terraform'
+ Plug 'neovim/nvim-lspconfig'
+ Plug 'nvim-lua/popup.nvim'
+ Plug 'nvim-lua/plenary.nvim'
+ Plug 'nvim-telescope/telescope.nvim'
+ Plug 'sebdah/vim-delve'
+ Plug 'chr4/nginx.vim'
+ Plug 'xolox/vim-misc'
+ Plug 'xolox/vim-lua-ftplugin'
+ " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+ Plug 'hrsh7th/nvim-compe'
+ Plug 'kyazdani42/nvim-web-devicons' " for file icons
+ Plug 'kyazdani42/nvim-tree.lua'
+ Plug 'lukas-reineke/indent-blankline.nvim'
 call plug#end()            " required
 
 filetype plugin indent on    " required
+set shortmess+=c
+
 " better menu
 set wildmenu
 " search while typing
@@ -70,8 +63,6 @@ set incsearch
 syntax on
 "change mapleader
 let mapleader=","
-
-let g:ansible_options = {'ignore_blank_lines': 0}
 
 if has('gui_running')
     set background=dark
@@ -85,8 +76,8 @@ else
     set background=dark
 endif
 
-"Supertab
-let g:SuperTabDefaultCompletionType = "<c-n>"
+
+set maxmempattern=2000000
 
 color gruvbox
 " Gruvbox colorscheme
@@ -94,26 +85,152 @@ let g:gruvbox_contrast_dark = "hard"
 let g:gruvbox_contrast_light = "soft"
 
 "Highlight active column and line
-" set cursorline
-" set cursorcolumn
 set lazyredraw
 
-""settings fo golnang
-let g:acp_enableAtStartup = 0
+"Telescope
+" Find files using Telescope command-line sugar.
+nnoremap <C-p> <cmd>Telescope find_files<cr>
+nnoremap <space>r <cmd>Telescope live_grep<cr>
+nnoremap <space>l <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
-" Use deoplete.
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#num_processes = 4
-let g:deoplete#max_list = 500
+" Set completeopt to have a better completion experience
+set completeopt=menuone,noinsert,noselect
 
-" Go related mappings
-au FileType go nmap <Leader>i <Plug>(go-info)
-au FileType go nmap <Leader>gd <Plug>(go-doc)
-au FileType go nmap <Leader>r <Plug>(go-run)
-au FileType go nmap <Leader>b <Plug>(go-build)
-au FileType go nmap <Leader>t <Plug>(go-test)
-"au FileType go nmap gd <Plug>(go-def-tab)
-au FileType go nmap <Leader>e <Plug>(go-rename)
+lua << EOF
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = true;
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+  };
+}
+
+local t = function(str)
+  return vim.api.nvim_replace_termcodes(str, true, true, true)
+end
+
+local check_back_space = function()
+    local col = vim.fn.col('.') - 1
+    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
+        return true
+    else
+        return false
+    end
+end
+
+-- Use (s-)tab to:
+--- move to prev/next item in completion menuone
+--- jump to prev/next snippet's placeholder
+_G.tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-n>"
+  elseif check_back_space() then
+    return t "<Tab>"
+  else
+    return vim.fn['compe#complete']()
+  end
+end
+_G.s_tab_complete = function()
+  if vim.fn.pumvisible() == 1 then
+    return t "<C-p>"
+  else
+    -- If <S-Tab> is not working in your terminal, change it to <C-h>
+    return t "<S-Tab>"
+  end
+end
+
+vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
+EOF
+
+
+
+"inoremap <silent><expr> <tab>     compe#complete()
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+autocmd FileType terraform setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd FileType terraform set completeopt -=preview
+
+autocmd FileType tf setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd FileType tf set completeopt -=preview
+
+autocmd FileType go setlocal omnifunc=v:lua.vim.lsp.omnifunc
+autocmd FileType go set completeopt -=preview
+
+lua << EOF
+local nvim_lsp = require('lspconfig')
+local on_attach = function(client, bufnr)
+
+    local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
+    local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
+
+    buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
+
+    -- Mappings.
+    local opts = { noremap=true, silent=true }
+    buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
+    buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
+    buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
+    buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
+    buf_set_keymap('n', '<C-m>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
+    buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+    buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+    buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+    buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
+    buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+end
+
+require'lspconfig'.gopls.setup{
+    on_attach = on_attach,
+    settings = {
+      gopls = {
+        analyses = {
+          unusedparams = true,
+          fieldalignment = true,
+        },
+        codelenses = {
+          gc_details = true,
+        },
+        staticcheck = true,
+      },
+    },
+}
+
+require'lspconfig'.terraformls.setup{
+    on_attach = on_attach,
+}
+EOF
+
+function! s:check_back_space() abort "{{{
+    let col = col('.') - 1
+    return !col || getline('.')[col - 1]  =~ '\s'
+endfunction"}}}
 
 "Golang highligt
 let g:go_highlight_functions = 1
@@ -124,36 +241,17 @@ let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_fmt_command = "goimports"
 
-"Golang settings
-let g:go_metalinter_enabled = ['vet', 'errcheck']
-let g:go_metalinter_autosave = 0
-let g:go_metalinter_autosave_enabled = ['vet']
-let g:go_metalinter_deadline = "5s"
-"let g:go_auto_type_info = 1
-"let g:go_auto_sameids = 1
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
+let g:go_rename_command = 'gopls'
 set updatetime=100
 
-"Go LSP
-
-" if executable('gopls')
-"     au User lsp_setup call lsp#register_server({
-"         \ 'name': 'gopls',
-"         \ 'cmd': {server_info->['gopls', '-mode', 'stdio']},
-"         \ 'whitelist': ['go'],
-"         \ })
-" endif
-
-"set mouse=a
 set number
 set ts=4
 set sw=4
 set autoindent
 set expandtab
 set showmatch
-
-let python_highlight_all = 1
 
 "hidding highligt of looking text
 noremap <C-n> :nohl<CR>
@@ -194,18 +292,13 @@ let g:tagbar_type_go = {
             \ 'ctagsargs' : '-sort -silent'
             \ }
 
-nmap <F8> :TagbarToggle<CR>
+" nmap <F8> :TagbarToggle<CR>
 
 " NERDTree
-"autocmd VimEnter * NERDTree
-"autocmd VimEnter * wincmd p
-nmap <leader>m :NERDTreeToggle<CR>
-let NERDTreeHighlightCursorline=1
-let NERDTreeIgnore = ['tmp', '.yardoc']
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"sudo save
-cmap w!! w !sudo tee % >/dev/null
+" nmap <leader>m :NERDTreeToggle<CR>
+" let NERDTreeHighlightCursorline=1
+" let NERDTreeIgnore = ['tmp', '.yardoc']
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "Easy window navigation
 map <C-h> <C-w>h
@@ -239,56 +332,11 @@ set hidden
 nnoremap <space>n :bnext<CR>
 nnoremap <space>p :bprev<CR>
 nnoremap <space>d :bdelete<CR>
-let g:ale_fixers = {
-            \ "*": ['remove_trailing_lines', 'trim_whitespace'],
-            \}
-" Set this variable to 1 to fix files when you save them.
-let g:ale_fix_on_save = 1
-" Only run linting when saving the file
-let g:ale_lint_on_enter = 0
-let g:ale_lint_on_text_changed = 'never'
-let g:ale_lint_on_insert_leave = 0
-" disable loclist and enable quickfix
-let g:ale_set_loclist = 1
-let g:ale_set_quickfix = 0
-let g:ale_open_list = 1
-
-function s:SetPythonSettings()
-    " highlight python self, when followed by a comma, a period or a parenth
-    syn match pythonBoolean "\(\W\|^\)\@<=self\([\.]\)\@="
-    setlocal completeopt-=preview
-    nnoremap <buffer> <C-]> :call jedi#goto_definitions()<CR>
-    nnoremap <buffer> <C-LeftMouse> :call jedi#goto_definitions()<CR>
-    " Python options
-    let g:jedi#completions_enabled = 0
-    let python_highlight_all=1
-    let g:jedi#show_call_signatures = "2"
-    let g:ale_linters_explicit = 1
-    let g:ale_python_pylint_change_directory = 0
-    let g:ale_linters = {
-                \ 'python': ['flake8', 'pylint'],
-                \}
-    let g:ale_python_mypy_options = "--namespace-package"
-
-    let g:ale_fixers = {
-                \ 'python': ['black'],
-                \}
-    let g:syntastic_python_python_exec = 'python3'
-    let g:deoplete#sources#jedi#enable_typeinfo = 0
-    let g:jedi#force_py_version = 3
-    set textwidth=88
-    set colorcolumn=+1
-    " autocmd BufWritePre *.py execute ':Black'
-endfunction
-autocmd FileType python call <SID>SetPythonSettings()
 
 "See how it works
 set mouse=a
 noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
 noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(-40)<CR>
-
-"Json
-let g:vim_json_syntax_conceal = 0
 
 " Strip trailing whitespace option
 let stripTrailingWhitespace = 1
@@ -325,15 +373,11 @@ endfunction
 command -bang StripTrailingWhitespaces call <SID>StripTrailingWhitespaces(<bang>0, 'n')
 
 
-"UltiSnip
-let g:UltiSnipsExpandTrigger="<c-u>"
-
 " Change Color when entering Insert Mode
 autocmd InsertEnter * highlight  CursorLine guibg=#323D3E
 autocmd InsertEnter * highlight  Cursor guibg=#00AAFF
 
 " Live substitute
-"
 if has('nvim')
     set inccommand=split
 endif
@@ -392,7 +436,7 @@ set statusline+=%0*\ %{toupper(g:currentmode[mode()])}   " Current mode
 " set statusline+=%3*%{GitInfo()}                      " Git Branch name
 set statusline+=%1*\ %t%m\ \                                 " File+modified
 set statusline+=\ %#warningmsg#
-set statusline+=%{SyntasticStatuslineFlag()}             " Syntastic errors
+"set statusline+=%{SyntasticStatuslineFlag()}             " Syntastic errors
 set statusline+=%*
 set statusline+=%2*\ %=                                  " Space
 set statusline+=%3*%{exists(':Tagbar')!=0?tagbar#currenttag('%s','','f'):''} " current tag
@@ -409,5 +453,55 @@ hi User2 ctermbg=237
 hi User3 ctermfg=013
 hi User3 ctermbg=237
 
-nnoremap <C-p> :<C-u>FZF<CR>
-nnoremap <space>l :<C-u>Buffer<CR>
+" Terraform
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+
+
+" nvim-tree
+"
+nmap <leader>m :NvimTreeToggle<CR>
+nnoremap <leader>r :NvimTreeRefresh<CR>
+nnoremap <leader>n :NvimTreeFindFile<CR>
+
+" default will show icon by default if no icon is provided
+" default shows no icon by default
+let g:nvim_tree_icons = {
+    \ 'default': '',
+    \ 'symlink': '',
+    \ 'git': {
+    \   'unstaged': "✗",
+    \   'staged': "✓",
+    \   'unmerged': "",
+    \   'renamed': "➜",
+    \   'untracked': "★",
+    \   'deleted': "",
+    \   'ignored': "◌"
+    \   },
+    \ 'folder': {
+    \   'arrow_open': "",
+    \   'arrow_closed': "",
+    \   'default': "",
+    \   'open': "",
+    \   'empty': "",
+    \   'empty_open': "",
+    \   'symlink': "",
+    \   'symlink_open': "",
+    \   },
+    \   'lsp': {
+    \     'hint': "",
+    \     'info': "",
+    \     'warning': "",
+    \     'error': "",
+    \   }
+    \ }
+
+" indent-blankline
+let g:indent_blankline_space_char = '.'
+let g:indent_blankline_show_end_of_line = v:true
+lua << EOF
+require("indent_blankline").setup {
+    char = "|",
+    buftype_exclude = {"terminal"}
+}
+EOF
