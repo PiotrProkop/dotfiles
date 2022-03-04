@@ -19,7 +19,7 @@ endif
  Plug 'habamax/vim-asciidoctor'
  Plug 'Rykka/riv.vim', { 'for': 'rst' }
  Plug 'scrooloose/nerdtree'
- Plug 'fatih/vim-go'
+ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
  Plug 'gryf/tagbar', {'branch': 'show_tag_kind2'}
  Plug 'morhetz/gruvbox'
  Plug 'tpope/vim-fugitive'
@@ -37,7 +37,6 @@ endif
  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
  Plug 'junegunn/fzf.vim'
  Plug 'hashivim/vim-terraform'
- Plug 'neovim/nvim-lspconfig'
  Plug 'nvim-lua/popup.nvim'
  Plug 'nvim-lua/plenary.nvim'
  Plug 'nvim-telescope/telescope.nvim'
@@ -46,7 +45,16 @@ endif
  Plug 'xolox/vim-misc'
  Plug 'xolox/vim-lua-ftplugin'
  " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
- Plug 'hrsh7th/nvim-compe'
+
+ "Plug 'hrsh7th/nvim-compe'
+ Plug 'neovim/nvim-lspconfig'
+ Plug 'hrsh7th/cmp-nvim-lsp'
+ Plug 'hrsh7th/cmp-buffer'
+ Plug 'hrsh7th/cmp-path'
+ Plug 'hrsh7th/nvim-cmp'
+ Plug 'hrsh7th/cmp-vsnip'
+ Plug 'hrsh7th/vim-vsnip'
+
  Plug 'kyazdani42/nvim-web-devicons' " for file icons
  Plug 'kyazdani42/nvim-tree.lua'
  Plug 'lukas-reineke/indent-blankline.nvim'
@@ -97,77 +105,102 @@ nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 " Set completeopt to have a better completion experience
 set completeopt=menuone,noinsert,noselect
 
-lua << EOF
-require'compe'.setup {
-  enabled = true;
-  autocomplete = true;
-  debug = false;
-  min_length = 1;
-  preselect = 'enable';
-  throttle_time = 80;
-  source_timeout = 200;
-  incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = true;
-
-  source = {
-    path = true;
-    buffer = true;
-    calc = true;
-    nvim_lsp = true;
-    nvim_lua = true;
-  };
-}
-
-local t = function(str)
-  return vim.api.nvim_replace_termcodes(str, true, true, true)
-end
-
-local check_back_space = function()
-    local col = vim.fn.col('.') - 1
-    if col == 0 or vim.fn.getline('.'):sub(col, col):match('%s') then
-        return true
-    else
-        return false
-    end
-end
-
--- Use (s-)tab to:
---- move to prev/next item in completion menuone
---- jump to prev/next snippet's placeholder
-_G.tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-n>"
-  elseif check_back_space() then
-    return t "<Tab>"
-  else
-    return vim.fn['compe#complete']()
-  end
-end
-_G.s_tab_complete = function()
-  if vim.fn.pumvisible() == 1 then
-    return t "<C-p>"
-  else
-    -- If <S-Tab> is not working in your terminal, change it to <C-h>
-    return t "<S-Tab>"
-  end
-end
-
-vim.api.nvim_set_keymap("i", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<Tab>", "v:lua.tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("i", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-vim.api.nvim_set_keymap("s", "<S-Tab>", "v:lua.s_tab_complete()", {expr = true})
-EOF
 
 
 
 "inoremap <silent><expr> <tab>     compe#complete()
-inoremap <silent><expr> <CR>      compe#confirm('<CR>')
-inoremap <silent><expr> <C-e>     compe#close('<C-e>')
-inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
-inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+" inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+
+inoremap <C-x><C-o> <Cmd>lua vimrc.cmp.lsp()<CR>
+inoremap <C-x><C-s> <Cmd>lua vimrc.cmp.snippet()<CR>
+
+lua << EOF
+local cmp = require('cmp')
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    mapping = {
+      ['<C-b>'] = cmp.mapping(cmp.mapping.scroll_docs(-4), { 'i', 'c' }),
+      ['<C-f>'] = cmp.mapping(cmp.mapping.scroll_docs(4), { 'i', 'c' }),
+      ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+      ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
+      ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+      ['<C-y>'] = cmp.config.disable, -- Specify `cmp.config.disable` if you want to remove the default `<C-y>` mapping.
+      ['<C-e>'] = cmp.mapping({
+        i = cmp.mapping.abort(),
+        c = cmp.mapping.close(),
+      }),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    },
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline('/', {
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+
+  -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  require('lspconfig')['gopls'].setup {
+    capabilities = capabilities
+  }
+
+    _G.vimrc = _G.vimrc or {}
+    _G.vimrc.cmp = _G.vimrc.cmp or {}
+    _G.vimrc.cmp.lsp = function()
+      cmp.complete({
+        config = {
+          sources = {
+            { name = 'nvim_lsp' }
+          }
+        }
+      })
+    end
+    _G.vimrc.cmp.snippet = function()
+      cmp.complete({
+        config = {
+          sources = {
+            { name = 'vsnip' }
+          }
+        }
+      })
+    end
+    _G.vimrc = _G.vimrc or {}
+    _G.vimrc.cmp = _G.vimrc.cmp or {}
+    _G.vimrc.cmp.on_text_changed = function()
+      local cursor = vim.api.nvim_win_get_cursor(0)
+      local line = vim.api.nvim_get_current_line()
+      local before = string.sub(line, 1, cursor[2] + 1)
+      if before:match('%s*$') then
+        cmp.complete() -- Trigger completion only if the cursor is placed at the end of line.
+      end
+    end
+EOF
+
 
 autocmd FileType terraform setlocal omnifunc=v:lua.vim.lsp.omnifunc
 autocmd FileType terraform set completeopt -=preview
@@ -200,9 +233,9 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
     buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '<space>e', '<cmd>lua vim.diagnostic.show_line_diagnostics()<CR>', opts)
+    buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 end
 
@@ -457,6 +490,11 @@ hi User3 ctermbg=237
 let g:terraform_align=1
 let g:terraform_fmt_on_save=1
 
+lua << EOF
+require'nvim-tree'.setup {
+  auto_close = true,
+}
+EOF
 
 " nvim-tree
 "
@@ -499,6 +537,7 @@ let g:nvim_tree_icons = {
 " indent-blankline
 let g:indent_blankline_space_char = '.'
 let g:indent_blankline_show_end_of_line = v:true
+
 lua << EOF
 require("indent_blankline").setup {
     char = "|",
