@@ -44,9 +44,7 @@ endif
  Plug 'chr4/nginx.vim'
  Plug 'xolox/vim-misc'
  Plug 'xolox/vim-lua-ftplugin'
- " Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
- "Plug 'hrsh7th/nvim-compe'
  Plug 'neovim/nvim-lspconfig'
  Plug 'hrsh7th/cmp-nvim-lsp'
  Plug 'hrsh7th/cmp-buffer'
@@ -58,6 +56,11 @@ endif
  Plug 'kyazdani42/nvim-web-devicons' " for file icons
  Plug 'kyazdani42/nvim-tree.lua'
  Plug 'lukas-reineke/indent-blankline.nvim'
+
+ Plug 'folke/trouble.nvim'
+ Plug 'folke/lsp-colors.nvim'
+
+ Plug 'romgrk/barbar.nvim'
 call plug#end()            " required
 
 filetype plugin indent on    " required
@@ -94,6 +97,9 @@ let g:gruvbox_contrast_light = "soft"
 
 "Highlight active column and line
 set lazyredraw
+
+" NOTE: If barbar's option dict isn't created yet, create it
+let bufferline = get(g:, 'bufferline', {})
 
 "Telescope
 " Find files using Telescope command-line sugar.
@@ -258,6 +264,7 @@ require'lspconfig'.gopls.setup{
 require'lspconfig'.terraformls.setup{
     on_attach = on_attach,
 }
+
 EOF
 
 function! s:check_back_space() abort "{{{
@@ -488,11 +495,10 @@ hi User3 ctermbg=237
 
 " Terraform
 let g:terraform_align=1
-let g:terraform_fmt_on_save=1
+" let g:terraform_fmt_on_save=1
 
 lua << EOF
 require'nvim-tree'.setup {
-  auto_close = true,
 }
 EOF
 
@@ -543,4 +549,28 @@ require("indent_blankline").setup {
     char = "|",
     buftype_exclude = {"terminal"}
 }
+EOF
+
+nnoremap <space>t <cmd>TroubleToggle document_diagnostics<cr>
+nnoremap gR <cmd>TroubleToggle lsp_references<cr>
+" Trouble settings
+lua << EOF
+  require("trouble").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
+  local actions = require("telescope.actions")
+  local trouble = require("trouble.providers.telescope")
+
+  local telescope = require("telescope")
+
+  telescope.setup {
+    defaults = {
+      mappings = {
+        i = { ["<c-t>"] = trouble.open_with_trouble },
+        n = { ["<c-t>"] = trouble.open_with_trouble },
+      },
+    },
+  }
 EOF
