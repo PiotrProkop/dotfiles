@@ -1,8 +1,7 @@
 local M = {}
 
 function M.setup()
-  local nvim_lsp = require('lspconfig')
-  local on_attach = function(client, bufnr)
+  on_attach = function(client, bufnr)
 
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
@@ -27,54 +26,6 @@ function M.setup()
     buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   end
-
-  require'lspconfig'.gopls.setup{
-      on_attach = on_attach,
-      settings = {
-        gopls = {
-          analyses = {
-            unusedparams = true,
-            fieldalignment = true,
-          },
-          codelenses = {
-            gc_details = true,
-          },
-          staticcheck = true,
-        },
-      },
-  }
-
-  require'lspconfig'.terraformls.setup{
-      on_attach = on_attach,
-  }
-
-  require'lspconfig'.bashls.setup{
-      on_attach = on_attach,
-  }
-
-  require'lspconfig'.sumneko_lua.setup {
-    on_attach = on_attach,
-    settings = {
-      Lua = {
-        runtime = {
-          -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-          version = 'LuaJIT',
-        },
-        diagnostics = {
-          -- Get the language server to recognize the `vim` global
-          globals = {'vim'},
-        },
-        workspace = {
-          -- Make the server aware of Neovim runtime files
-          library = vim.api.nvim_get_runtime_file("", true),
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier
-        telemetry = {
-          enable = false,
-        },
-      },
-    },
-}
 end
 
 return M

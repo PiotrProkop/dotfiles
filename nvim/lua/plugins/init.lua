@@ -106,6 +106,12 @@ function M.setup()
     use 'ray-x/go.nvim'
     use 'sebdah/vim-delve'
 
+    -- LSP plugins
+    use {
+      "williamboman/mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
+    }
+
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"

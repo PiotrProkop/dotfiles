@@ -70,8 +70,12 @@ vim.cmd([[augroup END]])
 -- use packer to install plugins
 require("plugins").setup()
 
--- setup lsp
-require("lsp").setup()
+-- Mason
+require("mason").setup()
+-- require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+    ensure_installed = { "sumneko_lua" }
+})
 
 -- setup cmp
 require("autocomplete").setup()
