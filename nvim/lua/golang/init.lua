@@ -2,7 +2,8 @@ local M = {}
 
 function M.setup()
   -- Golang
-  require('guihua.maps').setup()
+  -- require('guihua.maps').setup()
+
   require 'go'.setup({
     goimport = 'gopls', -- if set to 'gopls' will use golsp format
     gofmt = 'gopls', -- if set to gopls will use golsp format
@@ -10,10 +11,11 @@ function M.setup()
     tag_transform = false,
     test_dir = '',
     comment_placeholder = '   ',
-    lsp_cfg = true, -- false: use your own lspconfig
+    lsp_cfg = false, -- false: use your own lspconfig
     lsp_gofumpt = true, -- true: set default gofmt in gopls format to gofumpt
-    lsp_on_attach = true, -- use on_attach from go.nvim
+    lsp_on_attach = false, -- use on_attach from go.nvim
     dap_debug = true,
+    lsp_keymaps = false,
   })
 
   local format_sync_grp = vim.api.nvim_create_augroup("format", { clear = true })

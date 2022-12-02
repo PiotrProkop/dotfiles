@@ -1,3 +1,5 @@
+vim.opt.omnifunc =  'v:lua.vim.lsp.omnifunc'
+
 local opts = { noremap=true, silent=true }
 vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
 
@@ -18,3 +20,6 @@ require'lspconfig'.gopls.setup{
       },
     },
 }
+
+-- golang
+require("golang").setup()

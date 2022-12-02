@@ -1,8 +1,5 @@
-local M = {}
-
-function M.setup()
+lsp = {
   on_attach = function(client, bufnr)
-
     local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
     local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 
@@ -26,6 +23,6 @@ function M.setup()
     buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
     buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   end
-end
+}
 
-return M
+return lsp

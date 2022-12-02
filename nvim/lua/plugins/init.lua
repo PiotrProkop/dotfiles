@@ -56,7 +56,7 @@ function M.setup()
     use 'tpope/vim-fugitive'
 
     use 'junegunn/fzf.vim'
-    use 'ojroques/vim-oscyank'  -- clipboard over ssh through tmux
+    use {'ojroques/nvim-osc52'}
 
     -- trouble
     use 'nvim-telescope/telescope.nvim'
@@ -74,9 +74,6 @@ function M.setup()
     -- insert blankline with  ] + space
     use 'lukas-reineke/indent-blankline.nvim'
 
-    -- nice scrolling
-    use 'yuttie/comfortable-motion.vim'
-
     use "ellisonleao/gruvbox.nvim"
 
     use {
@@ -91,6 +88,9 @@ function M.setup()
       end
     })
 
+    -- show context
+    use 'nvim-treesitter/nvim-treesitter-context'
+
     -- trim whitespaces
     use 'cappyzawa/trim.nvim'
 
@@ -102,7 +102,7 @@ function M.setup()
 
     -- Golang
 
-    use 'ray-x/guihua.lua' -- float term, codeaction and codelens gui support
+    -- use 'ray-x/guihua.lua' -- float term, codeaction and codelens gui support
     use 'ray-x/go.nvim'
     use 'sebdah/vim-delve'
 
@@ -112,6 +112,18 @@ function M.setup()
       "williamboman/mason-lspconfig.nvim",
     }
 
+    -- speed up startup
+    use 'lewis6991/impatient.nvim'
+
+    -- mkdir create missing dirs when saving buffer
+    use {
+      'jghauser/mkdir.nvim'
+    }
+
+    -- nice scrolling written in lua
+    use 'karb94/neoscroll.nvim'
+
+    use "savq/melange-nvim"
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"

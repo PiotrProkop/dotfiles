@@ -133,12 +133,25 @@ require('lualine').setup{
   }
 }
 
--- ssh yank
-vim.cmd "autocmd TextYankPost * if v:event.operator is 'y' && v:event.regname is '' | OSCYank"
-
--- golang
-require("golang").setup()
 
 -- Load the colorscheme
 vim.o.background = "dark" -- or "light" for light mode
-vim.cmd[[ colorscheme gruvbox ]]
+vim.cmd[[ colorscheme melange ]]
+
+-- ssh yank
+local copy = function()
+  if vim.v.event.operator == 'y' and vim.v.event.regname == '' then
+    require('osc52').copy_register('')
+  end
+end
+
+vim.api.nvim_create_autocmd('TextYankPost', {callback = copy})
+
+-- enable impatient
+require('impatient')
+
+-- enable neoscroll
+require('neoscroll').setup()
+
+-- enable treesitter context
+require'treesitter-context'.setup()
