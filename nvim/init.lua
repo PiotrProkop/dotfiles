@@ -155,3 +155,29 @@ require('neoscroll').setup()
 
 -- enable treesitter context
 require'treesitter-context'.setup()
+
+vim.g.neovide_input_use_logo = 1
+vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
+vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
+
+-- easy terminal navigation
+-- nvim_set_keymap doesn't work
+vim.cmd [[
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-l> <C-\><C-n><C-w>l
+  tnoremap <Esc> <C-\><C-n>
+]]
+api.nvim_create_user_command("Bterm", "bo split | resize 10 | term", {})
+
+require('aerial').setup({
+  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
+  on_attach = function(bufnr)
+    -- Jump forwards/backwards with '{' and '}'
+    vim.keymap.set('n', ']', '<cmd>AerialPrev<CR>', {buffer = bufnr})
+    vim.keymap.set('n', '[', '<cmd>AerialNext<CR>', {buffer = bufnr})
+  end
+})

@@ -55,7 +55,6 @@ function M.setup()
     use 'tpope/vim-commentary'
     use 'tpope/vim-fugitive'
 
-    use 'junegunn/fzf.vim'
     use {'ojroques/nvim-osc52'}
 
     -- trouble
@@ -124,6 +123,11 @@ function M.setup()
     use 'karb94/neoscroll.nvim'
 
     use "savq/melange-nvim"
+
+    use {
+      'stevearc/aerial.nvim',
+      config = function() require('aerial').setup() end
+    }
 
     if packer_bootstrap then
       print "Restart Neovim required after installation!"
