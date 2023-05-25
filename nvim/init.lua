@@ -179,3 +179,6 @@ require('aerial').setup({
     vim.keymap.set('n', '[', '<cmd>AerialNext<CR>', {buffer = bufnr})
   end
 })
+
+-- load lsp
+require("lsp").setup()
