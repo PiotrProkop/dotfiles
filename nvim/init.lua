@@ -66,75 +66,35 @@ vim.cmd([[augroup CustomSettings]])
   vim.cmd([[autocmd TextYankPost * silent! lua vim.highlight.on_yank()]])
 vim.cmd([[augroup END]])
 
+-- easy terminal navigation
+-- nvim_set_keymap doesn't work
+vim.cmd [[
+  tnoremap <C-h> <C-\><C-n><C-w>h
+  tnoremap <C-j> <C-\><C-n><C-w>j
+  tnoremap <C-k> <C-\><C-n><C-w>k
+  tnoremap <C-l> <C-\><C-n><C-w>l
+  tnoremap <Esc> <C-\><C-n>
+]]
+
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
 -- use packer to install plugins
-require("plugins").setup()
+require("lazy").setup(require("plugins_lazy").config())
 
--- Mason
-require("mason").setup()
--- require("mason-lspconfig").setup()
-require("mason-lspconfig").setup()
-
--- setup cmp
-require("autocomplete").setup()
+-- -- setup cmp
 api.nvim_set_keymap("i", "<C-x><C-o>", "<Cmd>lua vimrc.cmp.lsp()<CR>", { noremap = true, silent = true })
 api.nvim_set_keymap("i", "<C-x><C-s>", "<Cmd>lua vimrc.cmp.snippet()<CR>", { noremap = true, silent = true })
-
--- nvim-tree
-require'nvim-tree'.setup()
-api.nvim_set_keymap("n", "<leader>m", ":NvimTreeToggle<CR>", { noremap = true, silent = true })
-api.nvim_set_keymap("n", "<leader>r", ":NvimTreeRefresh<CR>", { noremap = true, silent = true })
-
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all",
-  auto_install = true,
-}
-
--- trim whitespaces
-require('trim').setup()
-
--- indent blankline
-require("indent_blankline").setup {
-    char = "|",
-    buftype_exclude = {"terminal"}
-}
-
--- trouble
-require("trouble").setup {}
--- local actions = require("telescope.actions")
-local trouble = require("trouble.providers.telescope")
-
-local telescope = require("telescope")
-
-telescope.setup {
-  defaults = {
-    mappings = {
-      i = { ["<c-t>"] = trouble.open_with_trouble },
-      n = { ["<c-t>"] = trouble.open_with_trouble },
-    },
-  },
-}
-
-vim.keymap.set("n", "<leader>xx", "<cmd>TroubleToggle<cr>", {silent = true, noremap = true})
-vim.keymap.set("n", "<leader>xw", "<cmd>TroubleToggle workspace_diagnostics<cr>", {silent = true, noremap = true})
-vim.keymap.set("n", "<leader>xd", "<cmd>TroubleToggle document_diagnostics<cr>", {silent = true, noremap = true})
-vim.keymap.set("n", "<leader>xl", "<cmd>TroubleToggle loclist<cr>", {silent = true, noremap = true})
-vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", {silent = true, noremap = true})
-vim.keymap.set("n", "gR", "<cmd>TroubleToggle lsp_references<cr>", {silent = true, noremap = true})
-
--- statusline
-require('lualine').setup{
-    options = {
-      section_separators = { left = '', right = '' },
-      component_separators = { left = '', right = '' },
-      theme = 'gruvbox-material',
-  }
-}
-
-
--- Load the colorscheme
-vim.o.background = "dark" -- or "light" for light mode
-vim.cmd[[ colorscheme melange ]]
 
 -- ssh yank
 local copy = function()
@@ -145,40 +105,7 @@ end
 
 vim.api.nvim_create_autocmd('TextYankPost', {callback = copy})
 
--- enable impatient
-require('impatient')
-
--- enable neoscroll
-require('neoscroll').setup()
-
--- enable treesitter context
-require'treesitter-context'.setup()
-
-vim.g.neovide_input_use_logo = 1
-vim.api.nvim_set_keymap('', '<D-v>', '+p<CR>', { noremap = true, silent = true})
-vim.api.nvim_set_keymap('!', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-vim.api.nvim_set_keymap('t', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-vim.api.nvim_set_keymap('v', '<D-v>', '<C-R>+', { noremap = true, silent = true})
-
--- easy terminal navigation
--- nvim_set_keymap doesn't work
-vim.cmd [[
-  tnoremap <C-h> <C-\><C-n><C-w>h
-  tnoremap <C-j> <C-\><C-n><C-w>j
-  tnoremap <C-k> <C-\><C-n><C-w>k
-  tnoremap <C-l> <C-\><C-n><C-w>l
-  tnoremap <Esc> <C-\><C-n>
-]]
 api.nvim_create_user_command("Bterm", "bo split | resize 10 | term", {})
 
-require('aerial').setup({
-  -- optionally use on_attach to set keymaps when aerial has attached to a buffer
-  on_attach = function(bufnr)
-    -- Jump forwards/backwards with '{' and '}'
-    vim.keymap.set('n', ']', '<cmd>AerialPrev<CR>', {buffer = bufnr})
-    vim.keymap.set('n', '[', '<cmd>AerialNext<CR>', {buffer = bufnr})
-  end
-})
-
 -- load lsp
-require("lsp").setup()
+require("lsp_custom").setup()
