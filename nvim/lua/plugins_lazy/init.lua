@@ -158,27 +158,31 @@ function M.config()
         },
         config = function()
           require("go").setup()
+          require("golang").setup()
           require("lsp_custom").setup()
         end,
         event = {"CmdlineEnter"},
         ft = {"go", 'gomod'},
         build = ':lua require("go.install").update_all_sync()' -- if you need to install/update all binaries
-      },
-      {
-        "williamboman/mason.nvim",
-        config = function()
-          require("mason").setup()
-        end,
-      },
-      {
-        "williamboman/mason-lspconfig.nvim",
-        config = function()
-          require("mason-lspconfig").setup()
-        end,
-      },
-      {
-          'ojroques/nvim-osc52',
-      },
+    },
+    {
+      "williamboman/mason.nvim",
+      config = function()
+        require("mason").setup()
+      end,
+    },
+    {
+      "williamboman/mason-lspconfig.nvim",
+      config = function()
+        require("mason-lspconfig").setup()
+      end,
+    },
+    {
+        'ojroques/nvim-osc52',
+    },
+    {
+        'tpope/vim-fugitive',
+    },
   }
 end
 
