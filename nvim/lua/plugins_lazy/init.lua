@@ -20,7 +20,7 @@ function M.config()
     {
       "gryf/tagbar",
       branch = "show_tag_kind2",
-      lazy = true,
+      lazy = false,
     },
     {
       'hrsh7th/nvim-cmp',
@@ -93,11 +93,13 @@ function M.config()
     },
     {
       'lukas-reineke/indent-blankline.nvim',
-      config = function()
-        require("indent_blankline").setup {
+      main = "ibl",
+      opts = {
             char = "|",
             buftype_exclude = {"terminal"}
-        }
+      },
+      config = function()
+        require("ibl").setup()
       end
     },
     {
@@ -107,7 +109,10 @@ function M.config()
           local configs = require("nvim-treesitter.configs")
 
           configs.setup({
+              modules = {},
               ensure_installed = { "go", "lua", "vim", "vimdoc", "yaml", "json", "html" },
+              ignore_install = {},
+              auto_install = true,
               sync_install = false,
               highlight = { enable = true },
               indent = { enable = true },
@@ -158,7 +163,6 @@ function M.config()
         },
         config = function()
           require("go").setup()
-          require("golang").setup()
           require("lsp_custom").setup()
         end,
         event = {"CmdlineEnter"},
@@ -174,7 +178,11 @@ function M.config()
     {
       "williamboman/mason-lspconfig.nvim",
       config = function()
-        require("mason-lspconfig").setup()
+        require("mason-lspconfig").setup(
+          {
+            ensure_installed = {"gopls", "bashls", "lua_ls", "pylsp", "yamlls"},
+          }
+        )
       end,
     },
     {

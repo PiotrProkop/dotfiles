@@ -54,7 +54,7 @@ function M.setup()
   require("golang").setup()
 
   -- lua
-  require'lspconfig'.lua_ls.setup {
+  require('lspconfig').lua_ls.setup {
     on_attach = lsp.on_attach,
     settings = {
       Lua = {
@@ -83,6 +83,16 @@ function M.setup()
   require'lspconfig'.bashls.setup{
       on_attach = lsp.on_attach,
   }
+
+  require'lspconfig'.pylsp.setup({})
+
+  require'lspconfig'.yamlls.setup({
+      redhat = {
+        telemetry = {
+          enabled = false
+        }
+      }
+  })
 end
 
 return M
