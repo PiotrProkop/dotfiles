@@ -35,22 +35,14 @@ function M.setup()
       { name = 'buffer' },
     })
   })
-  
+
   -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
   cmp.setup.cmdline('/', {
     sources = {
       { name = 'buffer' }
     }
   })
-  
-  
-  -- Setup lspconfig.
-  local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
-  require('lspconfig')['gopls'].setup {
-    capabilities = capabilities
-  }
-  
+
   _G.vimrc = _G.vimrc or {}
   _G.vimrc.cmp = _G.vimrc.cmp or {}
   _G.vimrc.cmp.lsp = function()

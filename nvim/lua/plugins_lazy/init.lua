@@ -39,6 +39,12 @@ function M.config()
       },
       config = function()
         require("autocomplete").setup()
+
+        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+        require("lspconfig")["gitlab_lsp"].setup({
+          capabilities = capabilities,
+        })
+
       end
     },
     {
@@ -156,7 +162,7 @@ function M.config()
      {
         "ray-x/go.nvim",
         dependencies = {  -- optional packages
-          "ray-x/guihua.lua",
+          -- "ray-x/guihua.lua",
           "neovim/nvim-lspconfig",
           "nvim-treesitter/nvim-treesitter",
           'sebdah/vim-delve',
@@ -164,6 +170,7 @@ function M.config()
         config = function()
           require("go").setup()
           require("lsp_custom").setup()
+          require("golang").setup()
         end,
         event = {"CmdlineEnter"},
         ft = {"go", 'gomod'},
