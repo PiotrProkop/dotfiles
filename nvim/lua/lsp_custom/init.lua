@@ -32,7 +32,7 @@ function M.setup()
   vim.opt.omnifunc =  'v:lua.vim.lsp.omnifunc'
 
   local opts = { noremap=true, silent=true }
-  vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
+  -- vim.keymap.set('n', '<C-]>', vim.lsp.buf.definition, opts)
 
   -- Setup lspconfig.
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
@@ -43,7 +43,6 @@ function M.setup()
         gopls = {
           analyses = {
             unusedparams = true,
-            fieldalignment = true,
           },
           codelenses = {
             gc_details = true,
@@ -87,7 +86,8 @@ function M.setup()
   }
 
   require'lspconfig'.pylsp.setup({
-      capabilities = capabilities,
+    capabilities = capabilities,
+    on_attach = lsp.on_attach,
   })
 
   require'lspconfig'.yamlls.setup({

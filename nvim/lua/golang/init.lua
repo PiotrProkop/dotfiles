@@ -5,9 +5,9 @@ function M.setup()
   -- require('guihua.maps').setup()
 
   require 'go'.setup({
-    goimport = 'gopls', -- if set to 'gopls' will use golsp format
+    goimports = 'gopls', -- if set to 'gopls' will use golsp format
     gofmt = 'gopls', -- if set to gopls will use golsp format
-    max_line_len = 120,
+    -- max_line_len = 120,
     tag_transform = false,
     test_dir = '',
     comment_placeholder = '   ',
@@ -24,7 +24,7 @@ function M.setup()
   vim.api.nvim_create_autocmd("BufWritePre", {
     pattern = "*.go",
     callback = function()
-     require('go.format').goimport()
+     require('go.format').goimports()
     end,
     group = format_sync_grp,
   })

@@ -3,15 +3,7 @@ local M = {}
 function M.config()
   return {
     {
-      "/sainnhe/gruvbox-material",
-      lazy = false, -- make sure we load this during startup if it is your main colorscheme
-      priority = 1000, -- make sure to load this before all the other start plugins
-      dependencies = { 'folke/lsp-colors.nvim' },
-      config = function()
-        -- load the colorscheme here
-        vim.cmd([[colorscheme gruvbox-material]])
-        vim.g.gruvbox_material_background = 'hard'
-      end,
+      { "ellisonleao/gruvbox.nvim"},
     },
     {
       "nvim-lua/plenary.nvim",
@@ -147,14 +139,14 @@ function M.config()
         options = {
           section_separators = { left = '', right = '' },
           component_separators = { left = '', right = '' },
-          theme = 'gruvbox-material',
+          -- theme = 'gruvbox-material',
         },
         config = function()
           require('lualine').setup{
               options = {
                 section_separators = { left = '', right = '' },
                 component_separators = { left = '', right = '' },
-                theme = 'gruvbox-material',
+            --    theme = 'gruvbox-material',
             }
           }
         end,
@@ -168,9 +160,8 @@ function M.config()
           'sebdah/vim-delve',
         },
         config = function()
-          require("go").setup()
-          require("lsp_custom").setup()
-          require("golang").setup()
+          -- require("go").setup()
+          -- require("lsp_custom").setup()
         end,
         event = {"CmdlineEnter"},
         ft = {"go", 'gomod'},
@@ -188,6 +179,7 @@ function M.config()
         require("mason-lspconfig").setup(
           {
             ensure_installed = {"gopls", "bashls", "lua_ls", "pylsp", "yamlls"},
+            automatic_enable = false,
           }
         )
       end,
@@ -198,6 +190,116 @@ function M.config()
     {
         'tpope/vim-fugitive',
     },
+    -- {
+    --   'codota/tabnine-nvim',
+    --   build = './dl_binaries.sh  https://tabnine-poc.hwinf-scm-aws.nvidia.com/update',
+    -- },
+    -- {
+    --   "Exafunction/codeium.nvim",
+    --   dependencies = {
+    --       "nvim-lua/plenary.nvim",
+    --       "hrsh7th/nvim-cmp",
+    --   },
+    --   config = function()
+    --       require("codeium").setup({
+    --         api = {
+    --            host = "codeium-poc.hwinf-scm-aws.nvidia.com",
+    --            path = "_route/api_server",
+    --            portal_url = "codeium-poc.hwinf-scm-aws.nvidia.com",
+    --         },
+    --         enterprise_mode = true,
+    --         virtual_text = {
+    --           enabled = true,
+    --         }
+    --       })
+    --   end
+    -- },
+    {
+      "zbirenbaum/copilot.lua",
+      -- config = function()
+      --   require("copilot").setup({})
+      -- end,
+      cmd = "Copilot",
+      build = ":Copilot auth",
+      event = "InsertEnter",
+      opts = {
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          keymap = {
+            accept = "<Tab>",
+          --   accept = false, -- handled by nvim-cmp / blink.cmp
+          --   next = "<M-]>",
+          --   prev = "<M-[>",
+          },
+        },
+        panel = { enabled = false },
+        filetypes = {
+          markdown = true,
+          help = true,
+        },
+      },
+    },
+    {
+      "CopilotC-Nvim/CopilotChat.nvim",
+      dependencies = {
+        { "zbirenbaum/copilot.lua" }, -- or
+        { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
+      },
+      build = "make tiktoken", -- Only on MacOS or Linux
+      opts = {
+        -- See Configuration section for options
+      },
+      -- See Commands section for default commands if you want to lazy load on them
+    },
+
+    {
+      "tyru/open-browser-github.vim",
+        dependencies = {
+          "tyru/open-browser.vim",
+        },
+    },
+    {
+      "yetone/avante.nvim",
+      -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
+      -- ⚠️ must add this setting! ! !
+      build = function()
+          return "make"
+      end,
+      event = "VeryLazy",
+      version = false, -- Never set this value to "*"! Never!
+      ---@module 'avante'
+      ---@type avante.Config
+      opts = {
+        -- add any opts here
+        -- for example
+        provider = "copilot",
+        -- providers = {
+        --   claude = {
+        --     endpoint = "https://api.anthropic.com",
+        --     model = "claude-sonnet-4-20250514",
+        --     timeout = 30000, -- Timeout in milliseconds
+        --       extra_request_body = {
+        --         temperature = 0.75,
+        --         max_tokens = 20480,
+        --       },
+        --   },
+        -- },
+      },
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        --- The below dependencies are optional,
+        "echasnovski/mini.pick", -- for file_selector provider mini.pick
+        "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
+        "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
+        "ibhagwan/fzf-lua", -- for file_selector provider fzf
+        "stevearc/dressing.nvim", -- for input provider dressing
+        "folke/snacks.nvim", -- for input provider snacks
+        "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
+        "zbirenbaum/copilot.lua", -- for providers='copilot'
+      },
+    }
   }
 end
 

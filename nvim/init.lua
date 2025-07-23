@@ -109,3 +109,22 @@ api.nvim_create_user_command("Bterm", "bo split | resize 10 | term", {})
 
 -- load lsp
 require("lsp_custom").setup()
+
+
+-- require('tabnine').setup({
+--   disable_auto_comment=true,
+--   accept_keymap="<Tab>",
+--   dismiss_keymap = "<C-]>",
+--   debounce_ms = 800,
+--   suggestion_color = {gui = "#808080", cterm = 244},
+--   exclude_filetypes = {"TelescopePrompt", "NvimTree"},
+--   log_file_path = nil, -- absolute path to Tabnine log file
+--   tabnine_enterprise_host = "https://tabnine-poc.hwinf-scm-aws.nvidia.com",
+-- })
+vim.cmd[[let g:codeium_server_config = {
+  \'portal_url': 'https://codeium-poc.hwinf-scm-aws.nvidia.com',
+  \'api_url': 'https://codeium-poc.hwinf-scm-aws.nvidia.com/_route/api_server' }
+]]
+
+vim.o.background = "dark" -- or "light" for light mode
+vim.cmd([[colorscheme gruvbox]])
