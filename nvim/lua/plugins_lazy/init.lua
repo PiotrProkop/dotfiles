@@ -33,10 +33,6 @@ function M.config()
         require("autocomplete").setup()
 
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
-        require("lspconfig")["gitlab_lsp"].setup({
-          capabilities = capabilities,
-        })
-
       end
     },
     {

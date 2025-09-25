@@ -36,7 +36,7 @@ function M.setup()
 
   -- Setup lspconfig.
   local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
-  require'lspconfig'.gopls.setup{
+  vim.lsp.config("gopls",{
       capabilities = capabilities,
       on_attach = lsp.on_attach,
       settings = {
@@ -50,10 +50,10 @@ function M.setup()
           staticcheck = true,
         },
       },
-  }
+  })
 
   -- lua
-  require('lspconfig').lua_ls.setup {
+  vim.lsp.config("lua_ls",{
     capabilities = capabilities,
     on_attach = lsp.on_attach,
     settings = {
@@ -76,21 +76,21 @@ function M.setup()
         },
       },
     },
-  }
+  })
 
   -- bash
 
-  require'lspconfig'.bashls.setup{
+  vim.lsp.config("bashls",{
       capabilities = capabilities,
       on_attach = lsp.on_attach,
-  }
+  })
 
-  require'lspconfig'.pylsp.setup({
+  vim.lsp.config("pyls",{
     capabilities = capabilities,
     on_attach = lsp.on_attach,
   })
 
-  require'lspconfig'.yamlls.setup({
+  vim.lsp.config("yamlls",{
       capabilities = capabilities,
       redhat = {
         telemetry = {
