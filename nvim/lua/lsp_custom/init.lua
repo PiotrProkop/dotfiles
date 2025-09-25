@@ -51,6 +51,7 @@ function M.setup()
         },
       },
   })
+  vim.lsp.enable('gopls')
 
   -- lua
   vim.lsp.config("lua_ls",{
@@ -77,6 +78,7 @@ function M.setup()
       },
     },
   })
+  vim.lsp.enable('lua_ls')
 
   -- bash
 
@@ -84,11 +86,13 @@ function M.setup()
       capabilities = capabilities,
       on_attach = lsp.on_attach,
   })
+  vim.lsp.enable('bashls')
 
   vim.lsp.config("pyls",{
     capabilities = capabilities,
     on_attach = lsp.on_attach,
   })
+  vim.lsp.enable('pyls')
 
   vim.lsp.config("yamlls",{
       capabilities = capabilities,
@@ -98,6 +102,7 @@ function M.setup()
         }
       }
   })
+  vim.lsp.enable('yamlls')
 
 end
 
