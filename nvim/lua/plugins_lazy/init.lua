@@ -160,8 +160,9 @@ function M.config()
           'sebdah/vim-delve',
         },
         config = function()
-          -- require("go").setup()
-          -- require("lsp_custom").setup()
+          require("go").setup()
+          require("golang").setup()
+          require("lsp_custom").setup()
         end,
         event = {"CmdlineEnter"},
         ft = {"go", 'gomod'},

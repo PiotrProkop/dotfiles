@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.KeychronRemapping</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/hidutil</string>
+        <string>property</string>
+        <string>--matching</string>
+        <string>{"ProductID":0x0e20}</string>
+        <string>--set</string>
+        <string>{"UserKeyMapping":[
+            {
+              "HIDKeyboardModifierMappingSrc": 0x7000000E7,
+              "HIDKeyboardModifierMappingDst": 0x7000000E6
+            },
+            {
+              "HIDKeyboardModifierMappingSrc": 0x700000039,
+              "HIDKeyboardModifierMappingDst": 0x700000029
+            }
+        ]}</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+      <false/>
+    <key>LaunchEvents</key>
+    <dict>
+        <key>com.apple.iokit.matching</key>
+        <dict>
+            <key>com.apple.device-attach</key>
+            <dict>
+                <key>idVendor</key>
+                    <integer>13364</integer>
+                <key>idProduct</key>
+                    <integer>3616</integer>
+                <key>IOProviderClass</key>
+                    <string>IOUSBDevice</string>
+                <key>IOMatchLaunchStream</key>
+                    <true/>
+            </dict>
+        </dict>
+    </dict>
+</dict>
+</plist>
