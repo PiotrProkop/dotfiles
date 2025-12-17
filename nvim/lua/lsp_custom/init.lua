@@ -26,6 +26,23 @@ function M.setup()
       buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
       buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
       buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+
+      if client:supports_method(vim.lsp.protocol.Methods.textDocument_inlineCompletion, bufnr) then
+        vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
+
+        vim.keymap.set(
+          'i',
+          '<C-f>',
+          vim.lsp.inline_completion.get,
+          { desc = 'LSP: accept inline completion', buffer = bufnr }
+        )
+        vim.keymap.set(
+          'i',
+          '<C-g>',
+          vim.lsp.inline_completion.select,
+          { desc = 'LSP: switch inline completion', buffer = bufnr }
+        )
+      end
     end
   }
 
@@ -88,11 +105,11 @@ function M.setup()
   })
   vim.lsp.enable('bashls')
 
-  vim.lsp.config("pyls",{
+  vim.lsp.config("pylsp",{
     capabilities = capabilities,
     on_attach = lsp.on_attach,
   })
-  vim.lsp.enable('pyls')
+  vim.lsp.enable('pylsp')
 
   vim.lsp.config("yamlls",{
       capabilities = capabilities,
@@ -103,6 +120,11 @@ function M.setup()
       }
   })
   vim.lsp.enable('yamlls')
+  vim.lsp.config("copilot",{
+    capabilities = capabilities,
+    on_attach = lsp.on_attach,
+  })
+  vim.lsp.enable('copilot')
 
 end
 

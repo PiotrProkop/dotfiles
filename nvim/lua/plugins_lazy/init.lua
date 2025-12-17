@@ -31,8 +31,19 @@ function M.config()
       },
       config = function()
         require("autocomplete").setup()
-
-        local capabilities = require("cmp_nvim_lsp").default_capabilities()
+         local cmp = require'cmp'
+         cmp.setup({
+            completion = {
+                autocomplete = false,
+            },
+            mapping = cmp.mapping.preset.insert({
+              ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+              ['<C-f>'] = cmp.mapping.scroll_docs(4),
+              ['<C-Space>'] = cmp.mapping.complete(),
+              ['<C-e>'] = cmp.mapping.abort(),
+              ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+            }),
+        })
       end
     },
     {
@@ -188,68 +199,47 @@ function M.config()
         'tpope/vim-fugitive',
     },
     -- {
-    --   'codota/tabnine-nvim',
-    --   build = './dl_binaries.sh  https://tabnine-poc.hwinf-scm-aws.nvidia.com/update',
+    --   "zbirenbaum/copilot.lua",
+    --   requires = {
+    --     "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
+    --   },
+    --   -- config = function()
+    --   --   require("copilot").setup({})
+    --   -- end,
+    --   cmd = "Copilot",
+    --   build = ":Copilot auth",
+    --   event = "InsertEnter",
+    --   opts = {
+    --     suggestion = {
+    --       enabled = true,
+    --       auto_trigger = true,
+    --       keymap = {
+    --         accept = "<Tab>",
+    --       --   accept = false, -- handled by nvim-cmp / blink.cmp
+    --       --   next = "<M-]>",
+    --       --   prev = "<M-[>",
+    --       },
+    --     },
+    --     panel = { enabled = false },
+    --     filetypes = {
+    --       markdown = true,
+    --       help = true,
+    --     },
+    --   },
     -- },
     -- {
-    --   "Exafunction/codeium.nvim",
+    --   "CopilotC-Nvim/CopilotChat.nvim",
     --   dependencies = {
-    --       "nvim-lua/plenary.nvim",
-    --       "hrsh7th/nvim-cmp",
+    --     { "zbirenbaum/copilot.lua" }, -- or
+    --     { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
     --   },
-    --   config = function()
-    --       require("codeium").setup({
-    --         api = {
-    --            host = "codeium-poc.hwinf-scm-aws.nvidia.com",
-    --            path = "_route/api_server",
-    --            portal_url = "codeium-poc.hwinf-scm-aws.nvidia.com",
-    --         },
-    --         enterprise_mode = true,
-    --         virtual_text = {
-    --           enabled = true,
-    --         }
-    --       })
-    --   end
+    --   build = "make tiktoken", -- Only on MacOS or Linux
+    --   opts = {
+    --     -- See Configuration section for options
+    --   },
+    --   -- See Commands section for default commands if you want to lazy load on them
     -- },
-    {
-      "zbirenbaum/copilot.lua",
-      -- config = function()
-      --   require("copilot").setup({})
-      -- end,
-      cmd = "Copilot",
-      build = ":Copilot auth",
-      event = "InsertEnter",
-      opts = {
-        suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          keymap = {
-            accept = "<Tab>",
-          --   accept = false, -- handled by nvim-cmp / blink.cmp
-          --   next = "<M-]>",
-          --   prev = "<M-[>",
-          },
-        },
-        panel = { enabled = false },
-        filetypes = {
-          markdown = true,
-          help = true,
-        },
-      },
-    },
-    {
-      "CopilotC-Nvim/CopilotChat.nvim",
-      dependencies = {
-        { "zbirenbaum/copilot.lua" }, -- or
-        { "nvim-lua/plenary.nvim", branch = "master" }, -- for curl, log and async functions
-      },
-      build = "make tiktoken", -- Only on MacOS or Linux
-      opts = {
-        -- See Configuration section for options
-      },
-      -- See Commands section for default commands if you want to lazy load on them
-    },
-
+    --
     {
       "tyru/open-browser-github.vim",
         dependencies = {
@@ -257,46 +247,75 @@ function M.config()
         },
     },
     {
-      "yetone/avante.nvim",
-      -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
-      -- ⚠️ must add this setting! ! !
-      build = function()
-          return "make"
-      end,
-      event = "VeryLazy",
-      version = false, -- Never set this value to "*"! Never!
-      ---@module 'avante'
-      ---@type avante.Config
-      opts = {
-        -- add any opts here
-        -- for example
-        provider = "copilot",
-        -- providers = {
-        --   claude = {
-        --     endpoint = "https://api.anthropic.com",
-        --     model = "claude-sonnet-4-20250514",
-        --     timeout = 30000, -- Timeout in milliseconds
-        --       extra_request_body = {
-        --         temperature = 0.75,
-        --         max_tokens = 20480,
-        --       },
-        --   },
-        -- },
+      "folke/sidekick.nvim",
+      enabled = true,
+      opts = {},
+      keys = {
+        {
+          "<tab>",
+          function()
+            -- if there is a next edit, jump to it, otherwise apply it if any
+            if not require("sidekick").nes_jump_or_apply() then
+              return "<Tab>" -- fallback to normal tab
+            end
+          end,
+          expr = true,
+          desc = "Goto/Apply Next Edit Suggestion",
+        },
+        {
+          "<c-.>",
+          function() require("sidekick.cli").toggle() end,
+          desc = "Sidekick Toggle",
+          mode = { "n", "t", "i", "x" },
+        },
+        {
+          "<leader>aa",
+          function() require("sidekick.cli").toggle() end,
+          desc = "Sidekick Toggle CLI",
+        },
+        {
+          "<leader>as",
+          function() require("sidekick.cli").select() end,
+          -- Or to select only installed tools:
+          -- require("sidekick.cli").select({ filter = { installed = true } })
+          desc = "Select CLI",
+        },
+        {
+          "<leader>ad",
+          function() require("sidekick.cli").close() end,
+          desc = "Detach a CLI Session",
+        },
+        {
+          "<leader>at",
+          function() require("sidekick.cli").send({ msg = "{this}" }) end,
+          mode = { "x", "n" },
+          desc = "Send This",
+        },
+        {
+          "<leader>af",
+          function() require("sidekick.cli").send({ msg = "{file}" }) end,
+          desc = "Send File",
+        },
+        {
+          "<leader>av",
+          function() require("sidekick.cli").send({ msg = "{selection}" }) end,
+          mode = { "x" },
+          desc = "Send Visual Selection",
+        },
+        {
+          "<leader>ap",
+          function() require("sidekick.cli").prompt() end,
+          mode = { "n", "x" },
+          desc = "Sidekick Select Prompt",
+        },
+        -- Example of a keybinding to open Claude directly
+        {
+          "<leader>ac",
+          function() require("sidekick.cli").toggle({ name = "claude", focus = true }) end,
+          desc = "Sidekick Toggle Claude",
+        },
       },
-      dependencies = {
-        "nvim-lua/plenary.nvim",
-        "MunifTanjim/nui.nvim",
-        --- The below dependencies are optional,
-        "echasnovski/mini.pick", -- for file_selector provider mini.pick
-        "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-        "hrsh7th/nvim-cmp", -- autocompletion for avante commands and mentions
-        "ibhagwan/fzf-lua", -- for file_selector provider fzf
-        "stevearc/dressing.nvim", -- for input provider dressing
-        "folke/snacks.nvim", -- for input provider snacks
-        "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-        "zbirenbaum/copilot.lua", -- for providers='copilot'
-      },
-    }
+    },
   }
 end
 
