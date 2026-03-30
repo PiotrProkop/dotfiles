@@ -95,6 +95,7 @@ require("lazy").setup(require("plugins_lazy").config())
 -- -- setup cmp
 api.nvim_set_keymap("i", "<C-x><C-o>", "<Cmd>lua vimrc.cmp.lsp()<CR>", { noremap = true, silent = true })
 api.nvim_set_keymap("i", "<C-x><C-s>", "<Cmd>lua vimrc.cmp.snippet()<CR>", { noremap = true, silent = true })
+api.nvim_set_keymap("t", "<C-\\><C-n>", "<Esc>", { noremap = true, silent = true })
 
 -- ssh yank
 local copy = function()
