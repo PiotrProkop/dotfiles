@@ -28,6 +28,7 @@ function M.config()
       keys = {
         {"<C-x><C-o>", "<Cmd>lua vimrc.cmp.lsp()<CR>", desc = "Cmp", mode = "i"},
       },
+      ft = {"go", 'gomod', "rust"},
       config = function()
         require("autocomplete").setup()
       end
@@ -95,7 +96,7 @@ function M.config()
         config = function ()
           require("nvim-treesitter.configs").setup({
               modules = {},
-              ensure_installed = { "go", "lua", "vim", "vimdoc", "yaml", "json", "html" },
+              ensure_installed = { "go", "lua", "vim", "vimdoc", "yaml", "json", "html", "rust" },
               ignore_install = {},
               auto_install = true,
               sync_install = false,
@@ -162,7 +163,7 @@ function M.config()
       dependencies = { "williamboman/mason.nvim" },
       config = function()
         require("mason-lspconfig").setup({
-            ensure_installed = {"gopls", "bashls", "lua_ls", "pylsp", "yamlls"},
+            ensure_installed = {"gopls", "bashls", "lua_ls", "pylsp", "yamlls", "rust_analyzer"},
             automatic_enable = false,
         })
       end,

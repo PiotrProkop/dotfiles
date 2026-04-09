@@ -91,6 +91,7 @@ function M.setup()
   vim.lsp.enable('copilot')
 
   vim.lsp.config('rust_analyzer', {
+    filetypes = { "rust" },
     capabilities = capabilities,
     on_attach = lsp.on_attach,
     settings = {
